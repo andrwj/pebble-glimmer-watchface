@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>Glimmer Settings</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <style>
+    :root {
+      --bg-primary: #0b0f19;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --bg-card-hover: rgba(51, 65, 85, 0.8);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --accent: #38bdf8;
+      --accent-gradient: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --success: #34d399;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-primary);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.12) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      padding: 20px 16px 120px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 24px 0 32px;
+    }
+
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .header p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* Section & Cards */
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin: 24px 0 10px 6px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 12px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .card-info {
+      flex: 1;
+    }
+
+    .card-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 16px 0;
+    }
+
+    /* iOS Style Toggle Switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 30px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider-track {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #334155;
+      transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 30px;
+    }
+
+    .slider-track:before {
+      position: absolute;
+      content: "";
+      height: 24px;
+      width: 24px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    input:checked + .slider-track {
+      background: var(--accent-gradient);
+    }
+
+    input:checked + .slider-track:before {
+      transform: translateX(22px);
+    }
+
+    /* Range Sliders */
+    .range-container {
+      margin-top: 14px;
+    }
+
+    .range-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .badge-val {
+      display: inline-block;
+      padding: 3px 10px;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      background: transparent;
+    }
+
+    input[type=range]:focus {
+      outline: none;
+    }
+
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 8px;
+      cursor: pointer;
+      background: #334155;
+      border-radius: 4px;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      height: 22px;
+      width: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      cursor: pointer;
+      -webkit-appearance: none;
+      margin-top: -7px;
+      border: 2px solid var(--accent);
+    }
+
+    /* Color Selector Chips */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .color-chip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 6px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .color-chip:hover {
+      background: rgba(30, 41, 59, 0.9);
+    }
+
+    .color-chip.active {
+      border-color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+    }
+
+    .color-dot {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .color-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Update Interval Segment */
+    .interval-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .interval-btn {
+      padding: 10px 4px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .interval-btn.active {
+      background: var(--accent);
+      color: #0f172a;
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* Watch Preview Card */
+    .preview-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: radial-gradient(circle, #1e293b 0%, #0f172a 100%);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+    }
+
+    .mini-watch {
+      width: 140px;
+      height: 140px;
+      background: #ffffff;
+      border-radius: 50%;
+      border: 6px solid #334155;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 10px rgba(0,0,0,0.1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 0;
+    }
+
+    .mini-day {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      font-family: monospace;
+    }
+
+    .mini-date {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      font-family: monospace;
+    }
+
+    .mini-center-dot {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 10px;
+      height: 10px;
+      background: #000;
+      border-radius: 50%;
+    }
+
+    /* Fixed Bottom Action Bar */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 16px;
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border-color);
+      z-index: 100;
+    }
+
+    .bottom-content {
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 15px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.1s, opacity 0.2s;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-cancel {
+      background: rgba(51, 65, 85, 0.8);
+      color: var(--text-main);
+    }
+
+    .btn-save {
+      background: var(--accent-gradient);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.35);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-badge">Emery Edition</div>
+      <h1>Glimmer</h1>
+      <p>Dynamic Gesture & Power Management</p>
+    </div>
+
+    <!-- Live Preview -->
+    <div class="section-title">Live Preview</div>
+    <div class="preview-card">
+      <div class="mini-watch">
+        <div class="mini-day" id="preview-day">MON</div>
+        <div class="mini-center-dot"></div>
+        <div class="mini-date" id="preview-date">SEP.07</div>
+      </div>
+    </div>
+
+    <!-- Section 1: Motion & Sleep Gestures -->
+    <div class="section-title">모션 및 잠자기 제스처 (Gesture Controls)</div>
+    <div class="card">
+      <!-- Flip Toggle -->
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-label">뒤집어서 잠자기 / 깨우기 (Flip)</div>
+          <div class="card-desc">시계를 엎으면 잠들고, 다시 바로 돌려놓으면 즉시 깨어납니다.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="hibernate_face_down" checked>
+          <span class="slider-track"></span>
+        </label>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Sleep Angle Slider -->
+      <div class="range-container">
+        <div class="range-header">
+          <div>
+            <div class="card-label">잠자는 젖힘 각도 (Sleep Angle)</div>
+            <div class="card-desc">시계면을 바깥쪽으로 얼마 이상 젖힐 때 잠들지 설정합니다.</div>
+          </div>
+          <div class="badge-val" id="sleep_angle_badge">80°</div>
+        </div>
+        <input type="range" id="sleep_tilt_angle" min="60" max="120" step="5" value="80">
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Wake Angle Slider -->
+      <div class="range-container">
+        <div class="range-header">
+          <div>
+            <div class="card-label">깨어나는 몸쪽 각도 (Wake Angle)</div>
+            <div class="card-desc">시계면을 몸쪽으로 얼마 이하로 돌려놓았을 때 깨어날지 설정합니다.</div>
+          </div>
+          <div class="badge-val" id="wake_angle_badge">60°</div>
+        </div>
+        <input type="range" id="wake_tilt_angle" min="30" max="75" step="5" value="60">
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Face Up Rest Toggle -->
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-label">화면 위 수평 거치 시 잠자기 (Face-Up)</div>
+          <div class="card-desc">시계 화면이 하늘을 향한 채 평평한 곳에 놓여있을 때 잠듭니다.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="hibernate_face_up">
+          <span class="slider-track"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Section 2: Display & Styling -->
+    <div class="section-title">디스플레이 및 색상 (Display & Styling)</div>
+    <div class="card">
+      <div class="card-label">요일 / 날짜 텍스트 색상</div>
+      <div class="card-desc">다이얼에 표시되는 날짜와 요일의 색상을 선택합니다.</div>
+      
+      <div class="color-grid" id="color-palette">
+        <!-- Pebble Colors -->
+        <div class="color-chip active" data-argb="213" data-hex="#555555">
+          <div class="color-dot" style="background-color: #555555;"></div>
+          <span class="color-name">Dark Gray</span>
+        </div>
+        <div class="color-chip" data-argb="192" data-hex="#000000">
+          <div class="color-dot" style="background-color: #000000;"></div>
+          <span class="color-name">Black</span>
+        </div>
+        <div class="color-chip" data-argb="234" data-hex="#AAAAAA">
+          <div class="color-dot" style="background-color: #AAAAAA;"></div>
+          <span class="color-name">Light Gray</span>
+        </div>
+        <div class="color-chip" data-argb="198" data-hex="#0055AA">
+          <div class="color-dot" style="background-color: #0055AA;"></div>
+          <span class="color-name">Cobalt</span>
+        </div>
+        <div class="color-chip" data-argb="203" data-hex="#00AAFF">
+          <div class="color-dot" style="background-color: #00AAFF;"></div>
+          <span class="color-name">Cerulean</span>
+        </div>
+        <div class="color-chip" data-argb="212" data-hex="#550000">
+          <div class="color-dot" style="background-color: #550000;"></div>
+          <span class="color-name">Rose</span>
+        </div>
+        <div class="color-chip" data-argb="201" data-hex="#00AA55">
+          <div class="color-dot" style="background-color: #00AA55;"></div>
+          <span class="color-name">Jaeger</span>
+        </div>
+        <div class="color-chip" data-argb="193" data-hex="#000055">
+          <div class="color-dot" style="background-color: #000055;"></div>
+          <span class="color-name">Oxford</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Update Interval -->
+      <div class="card-label">주기적 시간 갱신 간격 (Update Interval)</div>
+      <div class="card-desc">0분은 볼 때만 깨어나는 초절전 모드입니다.</div>
+      
+      <div class="interval-grid" id="interval-group">
+        <div class="interval-btn active" data-interval="0">0분</div>
+        <div class="interval-btn" data-interval="5">5분</div>
+        <div class="interval-btn" data-interval="15">15분</div>
+        <div class="interval-btn" data-interval="30">30분</div>
+        <div class="interval-btn" data-interval="60">60분</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Action Bar -->
+  <div class="bottom-bar">
+    <div class="bottom-content">
+      <button class="btn btn-cancel" id="btn-cancel">취소</button>
+      <button class="btn btn-save" id="btn-save">설정 저장</button>
+    </div>
+  </div>
+
+  <script>
+    var currentOptions = {
+      update_interval: 0,
+      date_color: 213,
+      hibernate_face_down: 1,
+      hibernate_face_up: 0,
+      sleep_tilt_angle: 80,
+      wake_tilt_angle: 60
+    };
+
+    function updatePreview(hex) {
+      document.getElementById('preview-day').style.color = hex;
+      document.getElementById('preview-date').style.color = hex;
+    }
+
+    // Sliders
+    var sleepSlider = document.getElementById('sleep_tilt_angle');
+    var sleepBadge = document.getElementById('sleep_angle_badge');
+    sleepSlider.addEventListener('input', function() {
+      sleepBadge.textContent = this.value + '°';
+      currentOptions.sleep_tilt_angle = parseInt(this.value, 10);
+    });
+
+    var wakeSlider = document.getElementById('wake_tilt_angle');
+    var wakeBadge = document.getElementById('wake_angle_badge');
+    wakeSlider.addEventListener('input', function() {
+      wakeBadge.textContent = this.value + '°';
+      currentOptions.wake_tilt_angle = parseInt(this.value, 10);
+    });
+
+    // Color Chips
+    var colorChips = document.querySelectorAll('.color-chip');
+    colorChips.forEach(function(chip) {
+      chip.addEventListener('click', function() {
+        colorChips.forEach(function(c) { c.classList.remove('active'); });
+        this.classList.add('active');
+        var argb = parseInt(this.getAttribute('data-argb'), 10);
+        var hex = this.getAttribute('data-hex');
+        currentOptions.date_color = argb;
+        updatePreview(hex);
+      });
+    });
+
+    // Interval Buttons
+    var intervalBtns = document.querySelectorAll('.interval-btn');
+    intervalBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        intervalBtns.forEach(function(b) { b.classList.remove('active'); });
+        this.classList.add('active');
+        currentOptions.update_interval = parseInt(this.getAttribute('data-interval'), 10);
+      });
+    });
+
+    // Load initial options from URL Hash
+    function loadOptions() {
+      try {
+        var hash = window.location.hash.substring(1);
+        if (hash) {
+          var decoded = decodeURIComponent(hash);
+          var obj = JSON.parse(decoded);
+          
+          if (obj.update_interval !== undefined) {
+            currentOptions.update_interval = parseInt(obj.update_interval, 10);
+            intervalBtns.forEach(function(btn) {
+              btn.classList.toggle('active', parseInt(btn.getAttribute('data-interval'), 10) === currentOptions.update_interval);
+            });
+          }
+
+          if (obj.date_color) {
+            currentOptions.date_color = parseInt(obj.date_color, 10);
+            colorChips.forEach(function(chip) {
+              var match = parseInt(chip.getAttribute('data-argb'), 10) === currentOptions.date_color;
+              chip.classList.toggle('active', match);
+              if (match) {
+                updatePreview(chip.getAttribute('data-hex'));
+              }
+            });
+          }
+
+          if (obj.hibernate_face_down !== undefined) {
+            document.getElementById('hibernate_face_down').checked = !!parseInt(obj.hibernate_face_down, 10);
+          }
+
+          if (obj.hibernate_face_up !== undefined) {
+            document.getElementById('hibernate_face_up').checked = !!parseInt(obj.hibernate_face_up, 10);
+          }
+
+          if (obj.sleep_tilt_angle) {
+            sleepSlider.value = obj.sleep_tilt_angle;
+            sleepBadge.textContent = obj.sleep_tilt_angle + '°';
+            currentOptions.sleep_tilt_angle = parseInt(obj.sleep_tilt_angle, 10);
+          }
+
+          if (obj.wake_tilt_angle) {
+            wakeSlider.value = obj.wake_tilt_angle;
+            wakeBadge.textContent = obj.wake_tilt_angle + '°';
+            currentOptions.wake_tilt_angle = parseInt(obj.wake_tilt_angle, 10);
+          }
+        }
+      } catch (e) {
+        console.error('Error loading options from hash:', e);
+      }
+    }
+
+    // Buttons
+    document.getElementById('btn-cancel').addEventListener('click', function() {
+      document.location = 'pebblejs://close';
+    });
+
+    document.getElementById('btn-save').addEventListener('click', function() {
+      currentOptions.hibernate_face_down = document.getElementById('hibernate_face_down').checked ? 1 : 0;
+      currentOptions.hibernate_face_up = document.getElementById('hibernate_face_up').checked ? 1 : 0;
+      currentOptions.sleep_tilt_angle = parseInt(sleepSlider.value, 10);
+      currentOptions.wake_tilt_angle = parseInt(wakeSlider.value, 10);
+
+      var returnUri = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(currentOptions));
+      document.location = returnUri;
+    });
+
+    loadOptions();
+    updatePreview('#555555');
+  </script>
+</body>
+</html>
