@@ -1,5 +1,9 @@
 # Glimmer for Pebble
 
+<p align="center">
+  <img src="screenshot.png" alt="Glimmer Watchface" width="220">
+</p>
+
 Glimmer is a dynamic analog watchface tailored for Pebble smartwatches, featuring smooth catch-up rolling animations, natural wrist gestures, and an ultra-low-power hybrid architecture.
 
 ---
