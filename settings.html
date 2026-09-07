@@ -516,6 +516,34 @@
           <span class="slider-track"></span>
         </label>
       </div>
+
+      <div class="divider"></div>
+
+      <!-- Sleep Vibe Toggle -->
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-label" data-i18n="sleepVibeLabel">Vibrate on Sleep</div>
+          <div class="card-desc" data-i18n="sleepVibeDesc">Vibrate briefly when entering sleep mode.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="sleep_vibe">
+          <span class="slider-track"></span>
+        </label>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Wake Vibe Toggle -->
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-label" data-i18n="wakeVibeLabel">Vibrate on Wake</div>
+          <div class="card-desc" data-i18n="wakeVibeDesc">Vibrate briefly when waking up from sleep mode.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="wake_vibe">
+          <span class="slider-track"></span>
+        </label>
+      </div>
     </div>
 
     <!-- Section 2: Display & Styling -->
@@ -587,6 +615,10 @@
         wakeAngleDesc: "Angle tilted inward/upward to wake up the watch.",
         faceUpLabel: "Sleep when Resting Face-Up",
         faceUpDesc: "Enter sleep mode when placed flat face-up on a desk.",
+        sleepVibeLabel: "Vibrate on Sleep",
+        sleepVibeDesc: "Vibrate briefly when entering sleep mode.",
+        wakeVibeLabel: "Vibrate on Wake",
+        wakeVibeDesc: "Vibrate briefly when waking up from sleep mode.",
         displaySection: "Display & Styling",
         dateColorLabel: "Date & Day Text Color",
         dateColorDesc: "Choose any of the 64 Pebble SDK colors for the day and date.",
@@ -620,6 +652,10 @@
         wakeAngleDesc: "시계면을 몸쪽으로 얼마 이하로 돌려놓았을 때 깨어날지 설정합니다.",
         faceUpLabel: "화면 위 수평 거치 시 잠자기 (Face-Up)",
         faceUpDesc: "시계 화면이 하늘을 향한 채 평평한 곳에 놓여있을 때 잠듭니다.",
+        sleepVibeLabel: "잠들 때 진동",
+        sleepVibeDesc: "잠자기 모드로 진입할 때 짧게 진동합니다.",
+        wakeVibeLabel: "깨어날 때 진동",
+        wakeVibeDesc: "잠에서 깨어날 때 짧게 진동합니다.",
         displaySection: "디스플레이 및 색상",
         dateColorLabel: "요일 / 날짜 텍스트 색상",
         dateColorDesc: "다이얼에 표시되는 날짜와 요일의 색상을 선택합니다.",
@@ -681,7 +717,9 @@
       hibernate_face_down: 1,
       hibernate_face_up: 0,
       sleep_tilt_angle: 80,
-      wake_tilt_angle: 60
+      wake_tilt_angle: 60,
+      sleep_vibe: 0,
+      wake_vibe: 0
     };
 
     // Pebble SDK 64-Color Palette Definitions
@@ -974,6 +1012,14 @@
             document.getElementById('hibernate_face_up').checked = !!parseInt(obj.hibernate_face_up, 10);
           }
 
+          if (obj.sleep_vibe !== undefined) {
+            document.getElementById('sleep_vibe').checked = !!parseInt(obj.sleep_vibe, 10);
+          }
+
+          if (obj.wake_vibe !== undefined) {
+            document.getElementById('wake_vibe').checked = !!parseInt(obj.wake_vibe, 10);
+          }
+
           if (obj.sleep_tilt_angle) {
             sleepSlider.value = obj.sleep_tilt_angle;
             sleepBadge.textContent = obj.sleep_tilt_angle + '°';
@@ -999,6 +1045,8 @@
     document.getElementById('btn-save').addEventListener('click', function() {
       currentOptions.hibernate_face_down = document.getElementById('hibernate_face_down').checked ? 1 : 0;
       currentOptions.hibernate_face_up = document.getElementById('hibernate_face_up').checked ? 1 : 0;
+      currentOptions.sleep_vibe = document.getElementById('sleep_vibe').checked ? 1 : 0;
+      currentOptions.wake_vibe = document.getElementById('wake_vibe').checked ? 1 : 0;
       currentOptions.sleep_tilt_angle = parseInt(sleepSlider.value, 10);
       currentOptions.wake_tilt_angle = parseInt(wakeSlider.value, 10);
 
