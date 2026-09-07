@@ -523,15 +523,31 @@
     <div class="card">
       <div class="card-label" data-i18n="dateColorLabel">Date & Day Text Color</div>
       <div class="card-desc" data-i18n="dateColorDesc">Choose any of the 64 Pebble SDK colors for the day and date.</div>
-      
       <div id="date_color_picker"></div>
+
+      <div class="divider"></div>
+
+      <div class="card-label" data-i18n="hourColorLabel">Hour Hand Color</div>
+      <div class="card-desc" data-i18n="hourColorDesc">Choose any of the 64 Pebble SDK colors for the hour hand.</div>
+      <div id="hour_color_picker"></div>
+
+      <div class="divider"></div>
+
+      <div class="card-label" data-i18n="minuteColorLabel">Minute Hand Color</div>
+      <div class="card-desc" data-i18n="minuteColorDesc">Choose any of the 64 Pebble SDK colors for the minute hand.</div>
+      <div id="minute_color_picker"></div>
 
       <div class="divider"></div>
 
       <div class="card-label" data-i18n="secondColorLabel">Second Hand Color</div>
       <div class="card-desc" data-i18n="secondColorDesc">Choose any of the 64 Pebble SDK colors for the second hand.</div>
-      
       <div id="second_color_picker"></div>
+
+      <div class="divider"></div>
+
+      <div class="card-label" data-i18n="centerColorLabel">Center Circle Color</div>
+      <div class="card-desc" data-i18n="centerColorDesc">Choose any of the 64 Pebble SDK colors for the hands center circle.</div>
+      <div id="center_color_picker"></div>
 
       <div class="divider"></div>
 
@@ -573,9 +589,15 @@
         faceUpDesc: "Enter sleep mode when placed flat face-up on a desk.",
         displaySection: "Display & Styling",
         dateColorLabel: "Date & Day Text Color",
-        dateColorDesc: "Choose the color for the day and date on the dial.",
+        dateColorDesc: "Choose any of the 64 Pebble SDK colors for the day and date.",
+        hourColorLabel: "Hour Hand Color",
+        hourColorDesc: "Choose any of the 64 Pebble SDK colors for the hour hand.",
+        minuteColorLabel: "Minute Hand Color",
+        minuteColorDesc: "Choose any of the 64 Pebble SDK colors for the minute hand.",
         secondColorLabel: "Second Hand Color",
-        secondColorDesc: "Choose the color for the second hand on the dial.",
+        secondColorDesc: "Choose any of the 64 Pebble SDK colors for the second hand.",
+        centerColorLabel: "Center Circle Color",
+        centerColorDesc: "Choose any of the 64 Pebble SDK colors for the hands center circle.",
         updateIntervalLabel: "Update Interval",
         updateIntervalDesc: "0 min is ultra-power-saving (wakes only when checked).",
         min0: "0 min",
@@ -601,8 +623,14 @@
         displaySection: "디스플레이 및 색상",
         dateColorLabel: "요일 / 날짜 텍스트 색상",
         dateColorDesc: "다이얼에 표시되는 날짜와 요일의 색상을 선택합니다.",
+        hourColorLabel: "시침 색상",
+        hourColorDesc: "다이얼에 표시되는 시침의 색상을 선택합니다.",
+        minuteColorLabel: "분침 색상",
+        minuteColorDesc: "다이얼에 표시되는 분침의 색상을 선택합니다.",
         secondColorLabel: "초침 색상",
         secondColorDesc: "다이얼에 표시되는 초침의 색상을 선택합니다.",
+        centerColorLabel: "중앙 원 색상",
+        centerColorDesc: "시계 바늘 중앙 원의 색상을 선택합니다.",
         updateIntervalLabel: "주기적 시간 갱신 간격 (Update Interval)",
         updateIntervalDesc: "0분은 볼 때만 깨어나는 초절전 모드입니다.",
         min0: "0분",
@@ -646,7 +674,10 @@
     var currentOptions = {
       update_interval: 0,
       date_color: 213,
+      hour_color: 241,
+      minute_color: 241,
       second_color: 192,
+      center_color: 241,
       hibernate_face_down: 1,
       hibernate_face_up: 0,
       sleep_tilt_angle: 80,
@@ -842,10 +873,31 @@
       }
     });
 
+    var hourColorPicker = new PebbleColorPicker('hour_color_picker', {
+      initialValue: currentOptions.hour_color,
+      onChange: function(val) {
+        currentOptions.hour_color = val;
+      }
+    });
+
+    var minuteColorPicker = new PebbleColorPicker('minute_color_picker', {
+      initialValue: currentOptions.minute_color,
+      onChange: function(val) {
+        currentOptions.minute_color = val;
+      }
+    });
+
     var secondColorPicker = new PebbleColorPicker('second_color_picker', {
       initialValue: currentOptions.second_color,
       onChange: function(val) {
         currentOptions.second_color = val;
+      }
+    });
+
+    var centerColorPicker = new PebbleColorPicker('center_color_picker', {
+      initialValue: currentOptions.center_color,
+      onChange: function(val) {
+        currentOptions.center_color = val;
       }
     });
 
@@ -894,9 +946,24 @@
             dateColorPicker.setValue(currentOptions.date_color, false);
           }
 
+          if (obj.hour_color) {
+            currentOptions.hour_color = parseInt(obj.hour_color, 10);
+            hourColorPicker.setValue(currentOptions.hour_color, false);
+          }
+
+          if (obj.minute_color) {
+            currentOptions.minute_color = parseInt(obj.minute_color, 10);
+            minuteColorPicker.setValue(currentOptions.minute_color, false);
+          }
+
           if (obj.second_color) {
             currentOptions.second_color = parseInt(obj.second_color, 10);
             secondColorPicker.setValue(currentOptions.second_color, false);
+          }
+
+          if (obj.center_color) {
+            currentOptions.center_color = parseInt(obj.center_color, 10);
+            centerColorPicker.setValue(currentOptions.center_color, false);
           }
 
           if (obj.hibernate_face_down !== undefined) {
