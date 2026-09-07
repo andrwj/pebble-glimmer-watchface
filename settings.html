@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
   <meta charset="utf-8">
   <title>Glimmer Settings</title>
@@ -46,7 +46,15 @@
     /* Header */
     .header {
       text-align: center;
-      padding: 24px 0 32px;
+      padding: 20px 0 28px;
+      position: relative;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
     }
 
     .header-badge {
@@ -62,7 +70,31 @@
       color: var(--accent);
       letter-spacing: 0.5px;
       text-transform: uppercase;
-      margin-bottom: 12px;
+    }
+
+    .lang-switcher {
+      display: inline-flex;
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 999px;
+      padding: 2px;
+    }
+
+    .lang-btn {
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      transition: all 0.2s;
+    }
+
+    .lang-btn.active {
+      background: var(--accent);
+      color: #0f172a;
     }
 
     .header h1 {
@@ -72,7 +104,7 @@
       background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .header p {
@@ -113,14 +145,14 @@
     }
 
     .card-label {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       color: var(--text-main);
       margin-bottom: 4px;
     }
 
     .card-desc {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text-muted);
       line-height: 1.4;
     }
@@ -305,58 +337,6 @@
       font-weight: 700;
     }
 
-    /* Watch Preview Card */
-    .preview-card {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      background: radial-gradient(circle, #1e293b 0%, #0f172a 100%);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
-      margin-bottom: 20px;
-    }
-
-    .mini-watch {
-      width: 140px;
-      height: 140px;
-      background: #ffffff;
-      border-radius: 50%;
-      border: 6px solid #334155;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 10px rgba(0,0,0,0.1);
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 0;
-    }
-
-    .mini-day {
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      font-family: monospace;
-    }
-
-    .mini-date {
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      font-family: monospace;
-    }
-
-    .mini-center-dot {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 10px;
-      height: 10px;
-      background: #000;
-      border-radius: 50%;
-    }
-
     /* Fixed Bottom Action Bar */
     .bottom-bar {
       position: fixed;
@@ -410,29 +390,25 @@
   <div class="container">
     <!-- Header -->
     <div class="header">
-      <div class="header-badge">Emery Edition</div>
-      <h1>Glimmer</h1>
-      <p>Dynamic Gesture & Power Management</p>
-    </div>
-
-    <!-- Live Preview -->
-    <div class="section-title">Live Preview</div>
-    <div class="preview-card">
-      <div class="mini-watch">
-        <div class="mini-day" id="preview-day">MON</div>
-        <div class="mini-center-dot"></div>
-        <div class="mini-date" id="preview-date">SEP.07</div>
+      <div class="header-top">
+        <div class="header-badge">Emery Edition</div>
+        <div class="lang-switcher">
+          <button class="lang-btn" id="lang-ko" onclick="setLanguage('ko')">KO</button>
+          <button class="lang-btn" id="lang-en" onclick="setLanguage('en')">EN</button>
+        </div>
       </div>
+      <h1 data-i18n="title">Glimmer</h1>
+      <p data-i18n="subtitle">Dynamic Gesture & Power Management</p>
     </div>
 
     <!-- Section 1: Motion & Sleep Gestures -->
-    <div class="section-title">모션 및 잠자기 제스처 (Gesture Controls)</div>
+    <div class="section-title" data-i18n="gestureSection">Gesture Controls</div>
     <div class="card">
       <!-- Flip Toggle -->
       <div class="card-row">
         <div class="card-info">
-          <div class="card-label">뒤집어서 잠자기 / 깨우기 (Flip)</div>
-          <div class="card-desc">시계를 엎으면 잠들고, 다시 바로 돌려놓으면 즉시 깨어납니다.</div>
+          <div class="card-label" data-i18n="flipLabel">Flip to Sleep & Wake</div>
+          <div class="card-desc" data-i18n="flipDesc">Turn the watch face-down to sleep; turn upright to wake.</div>
         </div>
         <label class="switch">
           <input type="checkbox" id="hibernate_face_down" checked>
@@ -446,8 +422,8 @@
       <div class="range-container">
         <div class="range-header">
           <div>
-            <div class="card-label">잠자는 젖힘 각도 (Sleep Angle)</div>
-            <div class="card-desc">시계면을 바깥쪽으로 얼마 이상 젖힐 때 잠들지 설정합니다.</div>
+            <div class="card-label" data-i18n="sleepAngleLabel">Sleep Tilt Angle</div>
+            <div class="card-desc" data-i18n="sleepAngleDesc">Angle tilted outward/downward to enter sleep mode.</div>
           </div>
           <div class="badge-val" id="sleep_angle_badge">80°</div>
         </div>
@@ -460,8 +436,8 @@
       <div class="range-container">
         <div class="range-header">
           <div>
-            <div class="card-label">깨어나는 몸쪽 각도 (Wake Angle)</div>
-            <div class="card-desc">시계면을 몸쪽으로 얼마 이하로 돌려놓았을 때 깨어날지 설정합니다.</div>
+            <div class="card-label" data-i18n="wakeAngleLabel">Wake Tilt Angle</div>
+            <div class="card-desc" data-i18n="wakeAngleDesc">Angle tilted inward/upward to wake up the watch.</div>
           </div>
           <div class="badge-val" id="wake_angle_badge">60°</div>
         </div>
@@ -473,8 +449,8 @@
       <!-- Face Up Rest Toggle -->
       <div class="card-row">
         <div class="card-info">
-          <div class="card-label">화면 위 수평 거치 시 잠자기 (Face-Up)</div>
-          <div class="card-desc">시계 화면이 하늘을 향한 채 평평한 곳에 놓여있을 때 잠듭니다.</div>
+          <div class="card-label" data-i18n="faceUpLabel">Sleep when Resting Face-Up</div>
+          <div class="card-desc" data-i18n="faceUpDesc">Enter sleep mode when placed flat face-up on a desk.</div>
         </div>
         <label class="switch">
           <input type="checkbox" id="hibernate_face_up">
@@ -484,42 +460,42 @@
     </div>
 
     <!-- Section 2: Display & Styling -->
-    <div class="section-title">디스플레이 및 색상 (Display & Styling)</div>
+    <div class="section-title" data-i18n="displaySection">Display & Styling</div>
     <div class="card">
-      <div class="card-label">요일 / 날짜 텍스트 색상</div>
-      <div class="card-desc">다이얼에 표시되는 날짜와 요일의 색상을 선택합니다.</div>
+      <div class="card-label" data-i18n="dateColorLabel">Date & Day Text Color</div>
+      <div class="card-desc" data-i18n="dateColorDesc">Choose the color for the day and date on the dial.</div>
       
       <div class="color-grid" id="color-palette">
         <!-- Pebble Colors -->
-        <div class="color-chip active" data-argb="213" data-hex="#555555">
+        <div class="color-chip active" data-argb="213">
           <div class="color-dot" style="background-color: #555555;"></div>
           <span class="color-name">Dark Gray</span>
         </div>
-        <div class="color-chip" data-argb="192" data-hex="#000000">
+        <div class="color-chip" data-argb="192">
           <div class="color-dot" style="background-color: #000000;"></div>
           <span class="color-name">Black</span>
         </div>
-        <div class="color-chip" data-argb="234" data-hex="#AAAAAA">
+        <div class="color-chip" data-argb="234">
           <div class="color-dot" style="background-color: #AAAAAA;"></div>
           <span class="color-name">Light Gray</span>
         </div>
-        <div class="color-chip" data-argb="198" data-hex="#0055AA">
+        <div class="color-chip" data-argb="198">
           <div class="color-dot" style="background-color: #0055AA;"></div>
           <span class="color-name">Cobalt</span>
         </div>
-        <div class="color-chip" data-argb="203" data-hex="#00AAFF">
+        <div class="color-chip" data-argb="203">
           <div class="color-dot" style="background-color: #00AAFF;"></div>
           <span class="color-name">Cerulean</span>
         </div>
-        <div class="color-chip" data-argb="212" data-hex="#550000">
+        <div class="color-chip" data-argb="212">
           <div class="color-dot" style="background-color: #550000;"></div>
           <span class="color-name">Rose</span>
         </div>
-        <div class="color-chip" data-argb="201" data-hex="#00AA55">
+        <div class="color-chip" data-argb="201">
           <div class="color-dot" style="background-color: #00AA55;"></div>
           <span class="color-name">Jaeger</span>
         </div>
-        <div class="color-chip" data-argb="193" data-hex="#000055">
+        <div class="color-chip" data-argb="193">
           <div class="color-dot" style="background-color: #000055;"></div>
           <span class="color-name">Oxford</span>
         </div>
@@ -528,15 +504,15 @@
       <div class="divider"></div>
 
       <!-- Update Interval -->
-      <div class="card-label">주기적 시간 갱신 간격 (Update Interval)</div>
-      <div class="card-desc">0분은 볼 때만 깨어나는 초절전 모드입니다.</div>
+      <div class="card-label" data-i18n="updateIntervalLabel">Update Interval</div>
+      <div class="card-desc" data-i18n="updateIntervalDesc">0 min is ultra-power-saving (wakes only when checked).</div>
       
       <div class="interval-grid" id="interval-group">
-        <div class="interval-btn active" data-interval="0">0분</div>
-        <div class="interval-btn" data-interval="5">5분</div>
-        <div class="interval-btn" data-interval="15">15분</div>
-        <div class="interval-btn" data-interval="30">30분</div>
-        <div class="interval-btn" data-interval="60">60분</div>
+        <div class="interval-btn active" data-interval="0" data-i18n="min0">0 min</div>
+        <div class="interval-btn" data-interval="5" data-i18n="min5">5 min</div>
+        <div class="interval-btn" data-interval="15" data-i18n="min15">15 min</div>
+        <div class="interval-btn" data-interval="30" data-i18n="min30">30 min</div>
+        <div class="interval-btn" data-interval="60" data-i18n="min60">60 min</div>
       </div>
     </div>
   </div>
@@ -544,12 +520,93 @@
   <!-- Bottom Action Bar -->
   <div class="bottom-bar">
     <div class="bottom-content">
-      <button class="btn btn-cancel" id="btn-cancel">취소</button>
-      <button class="btn btn-save" id="btn-save">설정 저장</button>
+      <button class="btn btn-cancel" id="btn-cancel" data-i18n="cancelBtn">Cancel</button>
+      <button class="btn btn-save" id="btn-save" data-i18n="saveBtn">Save Settings</button>
     </div>
   </div>
 
   <script>
+    var i18nData = {
+      en: {
+        title: "Glimmer",
+        subtitle: "Dynamic Gesture & Power Management",
+        gestureSection: "Gesture & Sleep Controls",
+        flipLabel: "Flip to Sleep & Wake",
+        flipDesc: "Turn the watch face-down to sleep; turn upright to wake instantly.",
+        sleepAngleLabel: "Sleep Tilt Angle",
+        sleepAngleDesc: "Angle tilted outward/downward to enter sleep mode.",
+        wakeAngleLabel: "Wake Tilt Angle",
+        wakeAngleDesc: "Angle tilted inward/upward to wake up the watch.",
+        faceUpLabel: "Sleep when Resting Face-Up",
+        faceUpDesc: "Enter sleep mode when placed flat face-up on a desk.",
+        displaySection: "Display & Styling",
+        dateColorLabel: "Date & Day Text Color",
+        dateColorDesc: "Choose the color for the day and date on the dial.",
+        updateIntervalLabel: "Update Interval",
+        updateIntervalDesc: "0 min is ultra-power-saving (wakes only when checked).",
+        min0: "0 min",
+        min5: "5 min",
+        min15: "15 min",
+        min30: "30 min",
+        min60: "60 min",
+        cancelBtn: "Cancel",
+        saveBtn: "Save Settings"
+      },
+      ko: {
+        title: "Glimmer",
+        subtitle: "다이내믹 제스처 및 전력 관리",
+        gestureSection: "모션 및 잠자기 제스처",
+        flipLabel: "뒤집어서 잠자기 / 깨우기 (Flip)",
+        flipDesc: "시계를 엎으면 잠들고, 다시 바로 돌려놓으면 즉시 깨어납니다.",
+        sleepAngleLabel: "잠자는 젖힘 각도 (Sleep Angle)",
+        sleepAngleDesc: "시계면을 바깥쪽으로 얼마 이상 젖힐 때 잠들지 설정합니다.",
+        wakeAngleLabel: "깨어나는 몸쪽 각도 (Wake Angle)",
+        wakeAngleDesc: "시계면을 몸쪽으로 얼마 이하로 돌려놓았을 때 깨어날지 설정합니다.",
+        faceUpLabel: "화면 위 수평 거치 시 잠자기 (Face-Up)",
+        faceUpDesc: "시계 화면이 하늘을 향한 채 평평한 곳에 놓여있을 때 잠듭니다.",
+        displaySection: "디스플레이 및 색상",
+        dateColorLabel: "요일 / 날짜 텍스트 색상",
+        dateColorDesc: "다이얼에 표시되는 날짜와 요일의 색상을 선택합니다.",
+        updateIntervalLabel: "주기적 시간 갱신 간격 (Update Interval)",
+        updateIntervalDesc: "0분은 볼 때만 깨어나는 초절전 모드입니다.",
+        min0: "0분",
+        min5: "5분",
+        min15: "15분",
+        min30: "30분",
+        min60: "60분",
+        cancelBtn: "취소",
+        saveBtn: "설정 저장"
+      }
+    };
+
+    var currentLang = 'en';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      var dict = i18nData[lang] || i18nData['en'];
+
+      document.getElementById('lang-ko').classList.toggle('active', lang === 'ko');
+      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+      document.documentElement.lang = lang;
+
+      document.querySelectorAll('[data-i18n]').forEach(function(el) {
+        var key = el.getAttribute('data-i18n');
+        if (dict[key]) {
+          el.textContent = dict[key];
+        }
+      });
+    }
+
+    // Auto-detect browser/phone language
+    function detectLanguage() {
+      var userLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+      if (userLang.indexOf('ko') === 0) {
+        setLanguage('ko');
+      } else {
+        setLanguage('en');
+      }
+    }
+
     var currentOptions = {
       update_interval: 0,
       date_color: 213,
@@ -558,11 +615,6 @@
       sleep_tilt_angle: 80,
       wake_tilt_angle: 60
     };
-
-    function updatePreview(hex) {
-      document.getElementById('preview-day').style.color = hex;
-      document.getElementById('preview-date').style.color = hex;
-    }
 
     // Sliders
     var sleepSlider = document.getElementById('sleep_tilt_angle');
@@ -585,10 +637,7 @@
       chip.addEventListener('click', function() {
         colorChips.forEach(function(c) { c.classList.remove('active'); });
         this.classList.add('active');
-        var argb = parseInt(this.getAttribute('data-argb'), 10);
-        var hex = this.getAttribute('data-hex');
-        currentOptions.date_color = argb;
-        updatePreview(hex);
+        currentOptions.date_color = parseInt(this.getAttribute('data-argb'), 10);
       });
     });
 
@@ -622,9 +671,6 @@
             colorChips.forEach(function(chip) {
               var match = parseInt(chip.getAttribute('data-argb'), 10) === currentOptions.date_color;
               chip.classList.toggle('active', match);
-              if (match) {
-                updatePreview(chip.getAttribute('data-hex'));
-              }
             });
           }
 
@@ -668,8 +714,8 @@
       document.location = returnUri;
     });
 
+    detectLanguage();
     loadOptions();
-    updatePreview('#555555');
   </script>
 </body>
 </html>
