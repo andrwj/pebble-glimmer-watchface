@@ -4,7 +4,20 @@
   <img src="screenshot.png" alt="Glimmer Watchface" width="220">
 </p>
 
+<p align="center">
+  <a href="https://apps.repebble.com/558999a4133ae759810000f7">
+    <img src="https://img.shields.io/badge/Rebble_Appstore-Glimmer-ff4757?style=for-the-badge" alt="Rebble Appstore">
+  </a>
+</p>
+
 Glimmer is a dynamic, ultra-battery-efficient analog watchface built exclusively for **Pebble Time 2 (Emery)**. It combines the aesthetic charm of an active analog timepiece with the power efficiency of a digital watch.
+
+---
+
+## 📥 Appstore
+
+Available on the Rebble Appstore:  
+👉 **[Glimmer on Rebble Appstore](https://apps.repebble.com/558999a4133ae759810000f7)**
 
 ---
 
@@ -25,7 +38,7 @@ Glimmer is a dynamic, ultra-battery-efficient analog watchface built exclusively
 
 ## ⚙️ Configuration
 
-Settings page is hosted via GitHub Pages:
+Settings page is hosted via GitHub Pages:  
 `https://andrwj.github.io/pebble-glimmer-watchface/settings.html`
 
 ---
