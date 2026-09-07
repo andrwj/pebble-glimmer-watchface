@@ -265,48 +265,107 @@
       border: 2px solid var(--accent);
     }
 
-    /* Color Selector Chips */
-    .color-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-top: 12px;
+    /* Pebble 64-Color Picker Tool */
+    .pebble-color-picker-tool {
+      margin-top: 10px;
     }
 
-    .color-chip {
+    .color-preview-bar {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 6px;
-      padding: 10px 6px;
-      background: rgba(15, 23, 42, 0.6);
-      border: 2px solid transparent;
+      gap: 12px;
+      padding: 10px 14px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border-color);
       border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.2s;
+      margin-bottom: 10px;
     }
 
-    .color-chip:hover {
-      background: rgba(30, 41, 59, 0.9);
+    .color-preview-swatch {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+      flex-shrink: 0;
+      transition: background-color 0.15s ease;
     }
 
-    .color-chip.active {
-      border-color: var(--accent);
-      background: rgba(56, 189, 248, 0.12);
+    .color-preview-info {
+      flex: 1;
+      min-width: 0;
     }
 
-    .color-dot {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      border: 2px solid rgba(255, 255, 255, 0.2);
+    .color-preview-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .color-name {
+    .color-preview-code {
       font-size: 11px;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-align: center;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: var(--accent);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .color-matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 5px;
+      padding: 10px;
+      background: rgba(11, 15, 25, 0.65);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+    }
+
+    .color-cell {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 5px;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, outline 0.12s ease;
+      touch-action: manipulation;
+    }
+
+    .color-cell:hover {
+      transform: scale(1.22);
+      z-index: 10;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    .color-cell.active {
+      outline: 2px solid #ffffff;
+      outline-offset: 1px;
+      box-shadow: 0 0 0 3px var(--accent), 0 4px 12px rgba(0, 0, 0, 0.7);
+      transform: scale(1.12);
+      z-index: 15;
+    }
+
+    .color-cell.active::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: #ffffff;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+    }
+
+    .color-cell.active.light-color::after {
+      background-color: #000000;
     }
 
     /* Update Interval Segment */
@@ -463,43 +522,16 @@
     <div class="section-title" data-i18n="displaySection">Display & Styling</div>
     <div class="card">
       <div class="card-label" data-i18n="dateColorLabel">Date & Day Text Color</div>
-      <div class="card-desc" data-i18n="dateColorDesc">Choose the color for the day and date on the dial.</div>
+      <div class="card-desc" data-i18n="dateColorDesc">Choose any of the 64 Pebble SDK colors for the day and date.</div>
       
-      <div class="color-grid" id="color-palette">
-        <!-- Pebble Colors -->
-        <div class="color-chip active" data-argb="213">
-          <div class="color-dot" style="background-color: #555555;"></div>
-          <span class="color-name">Dark Gray</span>
-        </div>
-        <div class="color-chip" data-argb="192">
-          <div class="color-dot" style="background-color: #000000;"></div>
-          <span class="color-name">Black</span>
-        </div>
-        <div class="color-chip" data-argb="234">
-          <div class="color-dot" style="background-color: #AAAAAA;"></div>
-          <span class="color-name">Light Gray</span>
-        </div>
-        <div class="color-chip" data-argb="198">
-          <div class="color-dot" style="background-color: #0055AA;"></div>
-          <span class="color-name">Cobalt</span>
-        </div>
-        <div class="color-chip" data-argb="203">
-          <div class="color-dot" style="background-color: #00AAFF;"></div>
-          <span class="color-name">Cerulean</span>
-        </div>
-        <div class="color-chip" data-argb="212">
-          <div class="color-dot" style="background-color: #550000;"></div>
-          <span class="color-name">Rose</span>
-        </div>
-        <div class="color-chip" data-argb="201">
-          <div class="color-dot" style="background-color: #00AA55;"></div>
-          <span class="color-name">Jaeger</span>
-        </div>
-        <div class="color-chip" data-argb="193">
-          <div class="color-dot" style="background-color: #000055;"></div>
-          <span class="color-name">Oxford</span>
-        </div>
-      </div>
+      <div id="date_color_picker"></div>
+
+      <div class="divider"></div>
+
+      <div class="card-label" data-i18n="secondColorLabel">Second Hand Color</div>
+      <div class="card-desc" data-i18n="secondColorDesc">Choose any of the 64 Pebble SDK colors for the second hand.</div>
+      
+      <div id="second_color_picker"></div>
 
       <div class="divider"></div>
 
@@ -542,6 +574,8 @@
         displaySection: "Display & Styling",
         dateColorLabel: "Date & Day Text Color",
         dateColorDesc: "Choose the color for the day and date on the dial.",
+        secondColorLabel: "Second Hand Color",
+        secondColorDesc: "Choose the color for the second hand on the dial.",
         updateIntervalLabel: "Update Interval",
         updateIntervalDesc: "0 min is ultra-power-saving (wakes only when checked).",
         min0: "0 min",
@@ -567,6 +601,8 @@
         displaySection: "디스플레이 및 색상",
         dateColorLabel: "요일 / 날짜 텍스트 색상",
         dateColorDesc: "다이얼에 표시되는 날짜와 요일의 색상을 선택합니다.",
+        secondColorLabel: "초침 색상",
+        secondColorDesc: "다이얼에 표시되는 초침의 색상을 선택합니다.",
         updateIntervalLabel: "주기적 시간 갱신 간격 (Update Interval)",
         updateIntervalDesc: "0분은 볼 때만 깨어나는 초절전 모드입니다.",
         min0: "0분",
@@ -610,11 +646,208 @@
     var currentOptions = {
       update_interval: 0,
       date_color: 213,
+      second_color: 192,
       hibernate_face_down: 1,
       hibernate_face_up: 0,
       sleep_tilt_angle: 80,
       wake_tilt_angle: 60
     };
+
+    // Pebble SDK 64-Color Palette Definitions
+    var PEBBLE_COLOR_NAMES = {
+      192: { name: 'Black', c: 'GColorBlack', hex: '#000000' },
+      193: { name: 'Oxford Blue', c: 'GColorOxfordBlue', hex: '#000055' },
+      194: { name: 'Duke Blue', c: 'GColorDukeBlue', hex: '#0000AA' },
+      195: { name: 'Blue', c: 'GColorBlue', hex: '#0000FF' },
+      196: { name: 'Dark Green', c: 'GColorDarkGreen', hex: '#005500' },
+      197: { name: 'Midnight Green', c: 'GColorMidnightGreen', hex: '#005555' },
+      198: { name: 'Cobalt Blue', c: 'GColorCobaltBlue', hex: '#0055AA' },
+      199: { name: 'Blue Moon', c: 'GColorBlueMoon', hex: '#0055FF' },
+      200: { name: 'Islamic Green', c: 'GColorIslamicGreen', hex: '#00AA00' },
+      201: { name: 'Jaeger Green', c: 'GColorJaegerGreen', hex: '#00AA55' },
+      202: { name: 'Tiffany Blue', c: 'GColorTiffanyBlue', hex: '#00AAAA' },
+      203: { name: 'Vivid Cerulean', c: 'GColorVividCerulean', hex: '#00AAFF' },
+      204: { name: 'Green', c: 'GColorGreen', hex: '#00FF00' },
+      205: { name: 'Malachite', c: 'GColorMalachite', hex: '#00FF55' },
+      206: { name: 'Medium Spring Green', c: 'GColorMediumSpringGreen', hex: '#00FFAA' },
+      207: { name: 'Cyan', c: 'GColorCyan', hex: '#00FFFF' },
+      208: { name: 'Bulgarian Rose', c: 'GColorBulgarianRose', hex: '#550000' },
+      209: { name: 'Imperial Purple', c: 'GColorImperialPurple', hex: '#550055' },
+      210: { name: 'Indigo', c: 'GColorIndigo', hex: '#5500AA' },
+      211: { name: 'Electric Ultramarine', c: 'GColorElectricUltramarine', hex: '#5500FF' },
+      212: { name: 'Army Green', c: 'GColorArmyGreen', hex: '#555500' },
+      213: { name: 'Dark Gray', c: 'GColorDarkGray', hex: '#555555' },
+      214: { name: 'Liberty', c: 'GColorLiberty', hex: '#5555AA' },
+      215: { name: 'Very Light Blue', c: 'GColorVeryLightBlue', hex: '#5555FF' },
+      216: { name: 'Kelly Green', c: 'GColorKellyGreen', hex: '#55AA00' },
+      217: { name: 'May Green', c: 'GColorMayGreen', hex: '#55AA55' },
+      218: { name: 'Cadet Blue', c: 'GColorCadetBlue', hex: '#55AAAA' },
+      219: { name: 'Picton Blue', c: 'GColorPictonBlue', hex: '#55AAFF' },
+      220: { name: 'Bright Green', c: 'GColorBrightGreen', hex: '#55FF00' },
+      221: { name: 'Screamin\' Green', c: 'GColorScreaminGreen', hex: '#55FF55' },
+      222: { name: 'Medium Aquamarine', c: 'GColorMediumAquamarine', hex: '#55FFAA' },
+      223: { name: 'Electric Blue', c: 'GColorElectricBlue', hex: '#55FFFF' },
+      224: { name: 'Dark Candy Apple Red', c: 'GColorDarkCandyAppleRed', hex: '#AA0000' },
+      225: { name: 'Jazzberry Jam', c: 'GColorJazzberryJam', hex: '#AA0055' },
+      226: { name: 'Purple', c: 'GColorPurple', hex: '#AA00AA' },
+      227: { name: 'Vivid Violet', c: 'GColorVividViolet', hex: '#AA00FF' },
+      228: { name: 'Windsor Tan', c: 'GColorWindsorTan', hex: '#AA5500' },
+      229: { name: 'Rose Vale', c: 'GColorRoseVale', hex: '#AA5555' },
+      230: { name: 'Purpureus', c: 'GColorPurpureus', hex: '#AA55AA' },
+      231: { name: 'Lavender Indigo', c: 'GColorLavenderIndigo', hex: '#AA55FF' },
+      232: { name: 'Limerick', c: 'GColorLimerick', hex: '#AAAA00' },
+      233: { name: 'Brass', c: 'GColorBrass', hex: '#AAAA55' },
+      234: { name: 'Light Gray', c: 'GColorLightGray', hex: '#AAAAAA' },
+      235: { name: 'Baby Blue Eyes', c: 'GColorBabyBlueEyes', hex: '#AAAAFF' },
+      236: { name: 'Spring Bud', c: 'GColorSpringBud', hex: '#AAFF00' },
+      237: { name: 'Inchworm', c: 'GColorInchworm', hex: '#AAFF55' },
+      238: { name: 'Mint Green', c: 'GColorMintGreen', hex: '#AAFFAA' },
+      239: { name: 'Celeste', c: 'GColorCeleste', hex: '#AAFFFF' },
+      240: { name: 'Red', c: 'GColorRed', hex: '#FF0000' },
+      241: { name: 'Folly', c: 'GColorFolly', hex: '#FF0055' },
+      242: { name: 'Fashion Magenta', c: 'GColorFashionMagenta', hex: '#FF00AA' },
+      243: { name: 'Magenta', c: 'GColorMagenta', hex: '#FF00FF' },
+      244: { name: 'Orange', c: 'GColorOrange', hex: '#FF5500' },
+      245: { name: 'Sunset Orange', c: 'GColorSunsetOrange', hex: '#FF5555' },
+      246: { name: 'Brilliant Rose', c: 'GColorBrilliantRose', hex: '#FF55AA' },
+      247: { name: 'Shocking Pink', c: 'GColorShockingPink', hex: '#FF55FF' },
+      248: { name: 'Chrome Yellow', c: 'GColorChromeYellow', hex: '#FFAA00' },
+      249: { name: 'Rajah', c: 'GColorRajah', hex: '#FFAA55' },
+      250: { name: 'Melon', c: 'GColorMelon', hex: '#FFAAAA' },
+      251: { name: 'Rich Brilliant Lavender', c: 'GColorRichBrilliantLavender', hex: '#FFAAFF' },
+      252: { name: 'Yellow', c: 'GColorYellow', hex: '#FFFF00' },
+      253: { name: 'Icterine', c: 'GColorIcterine', hex: '#FFFF55' },
+      254: { name: 'Pastel Yellow', c: 'GColorPastelYellow', hex: '#FFFFAA' },
+      255: { name: 'White', c: 'GColorWhite', hex: '#FFFFFF' }
+    };
+
+    function isLightColor(hex) {
+      var r = parseInt(hex.substr(1, 2), 16);
+      var g = parseInt(hex.substr(3, 2), 16);
+      var b = parseInt(hex.substr(5, 2), 16);
+      return (r * 299 + g * 587 + b * 114) / 1000 > 140;
+    }
+
+    // Reusable Pebble Color Picker Component
+    function PebbleColorPicker(containerId, options) {
+      var self = this;
+      this.container = typeof containerId === 'string' ? document.getElementById(containerId) : containerId;
+      this.options = options || {};
+      this.value = parseInt(this.options.initialValue || 192, 10);
+      this.onChange = this.options.onChange || function() {};
+      this.render();
+    }
+
+    PebbleColorPicker.prototype.render = function() {
+      var self = this;
+      this.container.innerHTML = '';
+      this.container.className = 'pebble-color-picker-tool';
+
+      var previewBar = document.createElement('div');
+      previewBar.className = 'color-preview-bar';
+
+      var swatch = document.createElement('div');
+      swatch.className = 'color-preview-swatch';
+
+      var infoEl = document.createElement('div');
+      infoEl.className = 'color-preview-info';
+
+      var nameEl = document.createElement('div');
+      nameEl.className = 'color-preview-name';
+
+      var codeEl = document.createElement('div');
+      codeEl.className = 'color-preview-code';
+
+      infoEl.appendChild(nameEl);
+      infoEl.appendChild(codeEl);
+      previewBar.appendChild(swatch);
+      previewBar.appendChild(infoEl);
+      this.container.appendChild(previewBar);
+
+      this.swatch = swatch;
+      this.nameEl = nameEl;
+      this.codeEl = codeEl;
+
+      var grid = document.createElement('div');
+      grid.className = 'color-matrix-grid';
+
+      this.cells = {};
+
+      for (var i = 0; i < 64; i++) {
+        var argb = 192 + i;
+        var info = PEBBLE_COLOR_NAMES[argb];
+        var cell = document.createElement('div');
+        cell.className = 'color-cell' + (isLightColor(info.hex) ? ' light-color' : '');
+        cell.style.backgroundColor = info.hex;
+        cell.setAttribute('data-argb', argb);
+        cell.title = info.name + ' (' + info.hex + ' / ' + info.c + ')';
+
+        (function(a, inf, cEl) {
+          cEl.addEventListener('click', function() {
+            self.setValue(a, true);
+          });
+          cEl.addEventListener('mouseenter', function() {
+            self.updatePreview(a);
+          });
+        })(argb, info, cell);
+
+        grid.appendChild(cell);
+        this.cells[argb] = cell;
+      }
+
+      grid.addEventListener('mouseleave', function() {
+        self.updatePreview(self.value);
+      });
+
+      this.container.appendChild(grid);
+      this.setValue(this.value, false);
+    };
+
+    PebbleColorPicker.prototype.updatePreview = function(argb) {
+      var info = PEBBLE_COLOR_NAMES[argb] || PEBBLE_COLOR_NAMES[192];
+      this.swatch.style.backgroundColor = info.hex;
+      this.nameEl.textContent = info.name;
+      this.codeEl.textContent = info.hex + ' • ' + info.c + ' (' + argb + ')';
+    };
+
+    PebbleColorPicker.prototype.setValue = function(argb, triggerChange) {
+      var num = parseInt(argb, 10);
+      if (!PEBBLE_COLOR_NAMES[num]) {
+        num = 192;
+      }
+      this.value = num;
+
+      for (var k in this.cells) {
+        this.cells[k].classList.remove('active');
+      }
+      if (this.cells[num]) {
+        this.cells[num].classList.add('active');
+      }
+      this.updatePreview(num);
+
+      if (triggerChange && typeof this.onChange === 'function') {
+        this.onChange(num, PEBBLE_COLOR_NAMES[num]);
+      }
+    };
+
+    PebbleColorPicker.prototype.getValue = function() {
+      return this.value;
+    };
+
+    // Initialize Color Pickers
+    var dateColorPicker = new PebbleColorPicker('date_color_picker', {
+      initialValue: currentOptions.date_color,
+      onChange: function(val) {
+        currentOptions.date_color = val;
+      }
+    });
+
+    var secondColorPicker = new PebbleColorPicker('second_color_picker', {
+      initialValue: currentOptions.second_color,
+      onChange: function(val) {
+        currentOptions.second_color = val;
+      }
+    });
 
     // Sliders
     var sleepSlider = document.getElementById('sleep_tilt_angle');
@@ -629,16 +862,6 @@
     wakeSlider.addEventListener('input', function() {
       wakeBadge.textContent = this.value + '°';
       currentOptions.wake_tilt_angle = parseInt(this.value, 10);
-    });
-
-    // Color Chips
-    var colorChips = document.querySelectorAll('.color-chip');
-    colorChips.forEach(function(chip) {
-      chip.addEventListener('click', function() {
-        colorChips.forEach(function(c) { c.classList.remove('active'); });
-        this.classList.add('active');
-        currentOptions.date_color = parseInt(this.getAttribute('data-argb'), 10);
-      });
     });
 
     // Interval Buttons
@@ -668,10 +891,12 @@
 
           if (obj.date_color) {
             currentOptions.date_color = parseInt(obj.date_color, 10);
-            colorChips.forEach(function(chip) {
-              var match = parseInt(chip.getAttribute('data-argb'), 10) === currentOptions.date_color;
-              chip.classList.toggle('active', match);
-            });
+            dateColorPicker.setValue(currentOptions.date_color, false);
+          }
+
+          if (obj.second_color) {
+            currentOptions.second_color = parseInt(obj.second_color, 10);
+            secondColorPicker.setValue(currentOptions.second_color, false);
           }
 
           if (obj.hibernate_face_down !== undefined) {
