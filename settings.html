@@ -530,19 +530,6 @@
 
       <div class="card-row">
         <div class="card-info">
-          <div class="card-label" data-i18n="faceUpLabel">Sleep when Resting Face-Up</div>
-          <div class="card-desc" data-i18n="faceUpDesc">Enter sleep mode when placed flat face-up on a desk.</div>
-        </div>
-        <label class="switch">
-          <input type="checkbox" id="hibernate_face_up">
-          <span class="slider-track"></span>
-        </label>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="card-row">
-        <div class="card-info">
           <div class="card-label" data-i18n="flipLabel">Flip to Sleep & Wake</div>
           <div class="card-desc" data-i18n="flipDesc">Turn the watch face-down to sleep; turn upright to wake.</div>
         </div>
@@ -633,8 +620,6 @@
         sleepAngleDesc: "Angle tilted outward/downward to enter sleep mode.",
         wakeAngleLabel: "Wake Tilt Angle",
         wakeAngleDesc: "Angle tilted inward/upward to wake up the watch.",
-        faceUpLabel: "Sleep when Resting Face-Up",
-        faceUpDesc: "Enter sleep mode when placed flat face-up on a desk.",
         shakeToWakeLabel: "Shake to Wake",
         shakeToWakeDesc: "Shake the watch to catch up the hands.",
         sleepVibeLabel: "Vibrate on Sleep",
@@ -668,8 +653,6 @@
         sleepAngleDesc: "시계면을 바깥쪽으로 얼마 이상 젖힐 때 잠들지 설정합니다.",
         wakeAngleLabel: "깨어나는 몸쪽 각도 (Wake Angle)",
         wakeAngleDesc: "시계면을 몸쪽으로 얼마 이하로 돌려놓았을 때 깨어날지 설정합니다.",
-        faceUpLabel: "화면 위 수평 거치 시 잠자기 (Face-Up)",
-        faceUpDesc: "시계 화면이 하늘을 향한 채 평평한 곳에 놓여있을 때 잠듭니다.",
         shakeToWakeLabel: "흔들어서 깨우기",
         shakeToWakeDesc: "시계를 흔들면 바늘을 현재 시각으로 감습니다.",
         sleepVibeLabel: "잠들 때 진동",
@@ -729,7 +712,6 @@
       second_color: 192,
       center_color: 241,
       hibernate_face_down: 0,
-      hibernate_face_up: 0,
       sleep_tilt_angle: 80,
       wake_tilt_angle: 60,
       sleep_vibe: 0,
@@ -1065,9 +1047,6 @@
             document.getElementById('hibernate_face_down').checked = !!parseInt(obj.hibernate_face_down, 10);
           }
 
-          if (obj.hibernate_face_up !== undefined) {
-            document.getElementById('hibernate_face_up').checked = !!parseInt(obj.hibernate_face_up, 10);
-          }
 
           if (obj.sleep_vibe !== undefined) {
             document.getElementById('sleep_vibe').checked = !!parseInt(obj.sleep_vibe, 10);
@@ -1110,7 +1089,6 @@
 
     document.getElementById('btn-save').addEventListener('click', function() {
       currentOptions.hibernate_face_down = document.getElementById('hibernate_face_down').checked ? 1 : 0;
-      currentOptions.hibernate_face_up = document.getElementById('hibernate_face_up').checked ? 1 : 0;
       currentOptions.sleep_vibe = document.getElementById('sleep_vibe').checked ? 1 : 0;
       currentOptions.wake_vibe = document.getElementById('wake_vibe').checked ? 1 : 0;
       currentOptions.show_second_hand = document.getElementById('show_second_hand').checked ? 1 : 0;
