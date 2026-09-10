@@ -515,19 +515,6 @@
     <!-- Section 2: Sleep gestures -->
     <div class="section-title" data-i18n="gestureSection">Gesture Controls</div>
     <div class="card">
-      <div class="card-row" id="touch-to-wake-row">
-        <div class="card-info">
-          <div class="card-label" data-i18n="touchToWakeLabel">Touch to Sleep / Wake (Toggle)</div>
-          <div class="card-desc" data-i18n="touchToWakeDesc">Tap the screen to sleep if awake, or wake if asleep.</div>
-        </div>
-        <label class="switch">
-          <input type="checkbox" id="touch_to_wake">
-          <span class="slider-track"></span>
-        </label>
-      </div>
-
-      <div class="divider"></div>
-
       <div class="card-row" id="shake-to-wake-row">
         <div class="card-info">
           <div class="card-label" data-i18n="shakeToWakeLabel">Shake to Wake</div>
@@ -650,8 +637,6 @@
         faceUpDesc: "Enter sleep mode when placed flat face-up on a desk.",
         shakeToWakeLabel: "Shake to Wake",
         shakeToWakeDesc: "Shake the watch to catch up the hands.",
-        touchToWakeLabel: "Touch to Sleep / Wake (Toggle)",
-        touchToWakeDesc: "Tap the screen to sleep if awake, or wake if asleep.",
         sleepVibeLabel: "Vibrate on Sleep",
         sleepVibeDesc: "Vibrate briefly when entering sleep mode.",
         wakeVibeLabel: "Vibrate on Wake",
@@ -687,8 +672,6 @@
         faceUpDesc: "시계 화면이 하늘을 향한 채 평평한 곳에 놓여있을 때 잠듭니다.",
         shakeToWakeLabel: "흔들어서 깨우기",
         shakeToWakeDesc: "시계를 흔들면 바늘을 현재 시각으로 감습니다.",
-        touchToWakeLabel: "터치해서 재우기/깨우기 (토글)",
-        touchToWakeDesc: "깨어 있으면 잠들고, 자고 있으면 깨어납니다.",
         sleepVibeLabel: "잠들 때 진동",
         sleepVibeDesc: "잠자기 모드로 진입할 때 짧게 진동합니다.",
         wakeVibeLabel: "깨어날 때 진동",
@@ -753,7 +736,6 @@
       wake_vibe: 0,
       show_second_hand: 1,
       shake_to_wake: 0,
-      touch_to_wake: 0
     };
 
     // Pebble SDK 64-Color Palette Definitions
@@ -1103,9 +1085,6 @@
             document.getElementById('shake_to_wake').checked = !!parseInt(obj.shake_to_wake, 10);
           }
 
-          if (obj.touch_to_wake !== undefined) {
-            document.getElementById('touch_to_wake').checked = !!parseInt(obj.touch_to_wake, 10);
-          }
 
           if (obj.sleep_tilt_angle) {
             sleepSlider.value = obj.sleep_tilt_angle;
@@ -1136,7 +1115,6 @@
       currentOptions.wake_vibe = document.getElementById('wake_vibe').checked ? 1 : 0;
       currentOptions.show_second_hand = document.getElementById('show_second_hand').checked ? 1 : 0;
       currentOptions.shake_to_wake = document.getElementById('shake_to_wake').checked ? 1 : 0;
-      currentOptions.touch_to_wake = document.getElementById('touch_to_wake').checked ? 1 : 0;
       currentOptions.sleep_tilt_angle = parseInt(sleepSlider.value, 10);
       currentOptions.wake_tilt_angle = parseInt(wakeSlider.value, 10);
 
