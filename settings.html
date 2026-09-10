@@ -112,6 +112,14 @@
       color: var(--text-muted);
     }
 
+    .header-version {
+      margin-top: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--text-dim);
+    }
+
     /* Section & Cards */
     .section-title {
       font-size: 13px;
@@ -265,6 +273,15 @@
       border: 2px solid var(--accent);
     }
 
+    .range-container.is-disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    input[type=range]:disabled {
+      cursor: default;
+    }
+
     /* Pebble 64-Color Picker Tool */
     .pebble-color-picker-tool {
       margin-top: 10px;
@@ -278,7 +295,19 @@
       background: rgba(15, 23, 42, 0.7);
       border: 1px solid var(--border-color);
       border-radius: 12px;
+      margin-bottom: 0;
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .color-preview-bar:active {
+      transform: scale(0.99);
+    }
+
+    .pebble-color-picker-tool.is-open .color-preview-bar {
       margin-bottom: 10px;
+      border-color: rgba(56, 189, 248, 0.45);
     }
 
     .color-preview-swatch {
@@ -316,13 +345,17 @@
     }
 
     .color-matrix-grid {
-      display: grid;
+      display: none;
       grid-template-columns: repeat(8, 1fr);
       gap: 5px;
       padding: 10px;
       background: rgba(11, 15, 25, 0.65);
       border: 1px solid var(--border-color);
       border-radius: 12px;
+    }
+
+    .pebble-color-picker-tool.is-open .color-matrix-grid {
+      display: grid;
     }
 
     .color-cell {
@@ -458,68 +491,25 @@
       </div>
       <h1 data-i18n="title">Glimmer</h1>
       <p data-i18n="subtitle">Dynamic Gesture & Power Management</p>
+      <div class="header-version">v1.9</div>
     </div>
 
-    <!-- Section 1: Motion & Sleep Gestures -->
-    <div class="section-title" data-i18n="gestureSection">Gesture Controls</div>
+    <!-- Section 1: Everyday — second hand, haptics, update interval -->
+    <div class="section-title" data-i18n="everydaySection">Display & Haptics</div>
     <div class="card">
-      <!-- Flip Toggle -->
       <div class="card-row">
         <div class="card-info">
-          <div class="card-label" data-i18n="flipLabel">Flip to Sleep & Wake</div>
-          <div class="card-desc" data-i18n="flipDesc">Turn the watch face-down to sleep; turn upright to wake.</div>
+          <div class="card-label" data-i18n="showSecondHandLabel">Show Second Hand</div>
+          <div class="card-desc" data-i18n="showSecondHandDesc">Show the second hand for a few seconds after you look at the watch.</div>
         </div>
         <label class="switch">
-          <input type="checkbox" id="hibernate_face_down" checked>
+          <input type="checkbox" id="show_second_hand" checked>
           <span class="slider-track"></span>
         </label>
       </div>
 
       <div class="divider"></div>
 
-      <!-- Sleep Angle Slider -->
-      <div class="range-container">
-        <div class="range-header">
-          <div>
-            <div class="card-label" data-i18n="sleepAngleLabel">Sleep Tilt Angle</div>
-            <div class="card-desc" data-i18n="sleepAngleDesc">Angle tilted outward/downward to enter sleep mode.</div>
-          </div>
-          <div class="badge-val" id="sleep_angle_badge">80°</div>
-        </div>
-        <input type="range" id="sleep_tilt_angle" min="60" max="120" step="5" value="80">
-      </div>
-
-      <div class="divider"></div>
-
-      <!-- Wake Angle Slider -->
-      <div class="range-container">
-        <div class="range-header">
-          <div>
-            <div class="card-label" data-i18n="wakeAngleLabel">Wake Tilt Angle</div>
-            <div class="card-desc" data-i18n="wakeAngleDesc">Angle tilted inward/upward to wake up the watch.</div>
-          </div>
-          <div class="badge-val" id="wake_angle_badge">60°</div>
-        </div>
-        <input type="range" id="wake_tilt_angle" min="30" max="75" step="5" value="60">
-      </div>
-
-      <div class="divider"></div>
-
-      <!-- Face Up Rest Toggle -->
-      <div class="card-row">
-        <div class="card-info">
-          <div class="card-label" data-i18n="faceUpLabel">Sleep when Resting Face-Up</div>
-          <div class="card-desc" data-i18n="faceUpDesc">Enter sleep mode when placed flat face-up on a desk.</div>
-        </div>
-        <label class="switch">
-          <input type="checkbox" id="hibernate_face_up">
-          <span class="slider-track"></span>
-        </label>
-      </div>
-
-      <div class="divider"></div>
-
-      <!-- Sleep Vibe Toggle -->
       <div class="card-row">
         <div class="card-info">
           <div class="card-label" data-i18n="sleepVibeLabel">Vibrate on Sleep</div>
@@ -533,7 +523,6 @@
 
       <div class="divider"></div>
 
-      <!-- Wake Vibe Toggle -->
       <div class="card-row">
         <div class="card-info">
           <div class="card-label" data-i18n="wakeVibeLabel">Vibrate on Wake</div>
@@ -544,9 +533,76 @@
           <span class="slider-track"></span>
         </label>
       </div>
+
+      <div class="divider"></div>
+
+      <div class="card-label" data-i18n="updateIntervalLabel">Update Interval</div>
+      <div class="card-desc" data-i18n="updateIntervalDesc">0 min is ultra-power-saving (wakes only when checked).</div>
+
+      <div class="interval-grid" id="interval-group">
+        <div class="interval-btn active" data-interval="0" data-i18n="min0">0 min</div>
+        <div class="interval-btn" data-interval="5" data-i18n="min5">5 min</div>
+        <div class="interval-btn" data-interval="15" data-i18n="min15">15 min</div>
+        <div class="interval-btn" data-interval="30" data-i18n="min30">30 min</div>
+        <div class="interval-btn" data-interval="60" data-i18n="min60">60 min</div>
+      </div>
     </div>
 
-    <!-- Section 2: Display & Styling -->
+    <!-- Section 2: Sleep gestures -->
+    <div class="section-title" data-i18n="gestureSection">Gesture Controls</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-label" data-i18n="flipLabel">Flip to Sleep & Wake</div>
+          <div class="card-desc" data-i18n="flipDesc">Turn the watch face-down to sleep; turn upright to wake.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="hibernate_face_down" checked>
+          <span class="slider-track"></span>
+        </label>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="range-container" id="sleep-angle-row">
+        <div class="range-header">
+          <div>
+            <div class="card-label" data-i18n="sleepAngleLabel">Sleep Tilt Angle</div>
+            <div class="card-desc" data-i18n="sleepAngleDesc">Angle tilted outward/downward to enter sleep mode.</div>
+          </div>
+          <div class="badge-val" id="sleep_angle_badge">80°</div>
+        </div>
+        <input type="range" id="sleep_tilt_angle" min="60" max="120" step="5" value="80">
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="range-container" id="wake-angle-row">
+        <div class="range-header">
+          <div>
+            <div class="card-label" data-i18n="wakeAngleLabel">Wake Tilt Angle</div>
+            <div class="card-desc" data-i18n="wakeAngleDesc">Angle tilted inward/upward to wake up the watch.</div>
+          </div>
+          <div class="badge-val" id="wake_angle_badge">60°</div>
+        </div>
+        <input type="range" id="wake_tilt_angle" min="30" max="75" step="5" value="60">
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-label" data-i18n="faceUpLabel">Sleep when Resting Face-Up</div>
+          <div class="card-desc" data-i18n="faceUpDesc">Enter sleep mode when placed flat face-up on a desk.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="hibernate_face_up">
+          <span class="slider-track"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Section 3: Colors (all palettes together) -->
     <div class="section-title" data-i18n="displaySection">Display & Styling</div>
     <div class="card">
       <div class="card-label" data-i18n="dateColorLabel">Date & Day Text Color</div>
@@ -576,20 +632,6 @@
       <div class="card-label" data-i18n="centerColorLabel">Center Circle Color</div>
       <div class="card-desc" data-i18n="centerColorDesc">Choose any of the 64 Pebble SDK colors for the hands center circle.</div>
       <div id="center_color_picker"></div>
-
-      <div class="divider"></div>
-
-      <!-- Update Interval -->
-      <div class="card-label" data-i18n="updateIntervalLabel">Update Interval</div>
-      <div class="card-desc" data-i18n="updateIntervalDesc">0 min is ultra-power-saving (wakes only when checked).</div>
-      
-      <div class="interval-grid" id="interval-group">
-        <div class="interval-btn active" data-interval="0" data-i18n="min0">0 min</div>
-        <div class="interval-btn" data-interval="5" data-i18n="min5">5 min</div>
-        <div class="interval-btn" data-interval="15" data-i18n="min15">15 min</div>
-        <div class="interval-btn" data-interval="30" data-i18n="min30">30 min</div>
-        <div class="interval-btn" data-interval="60" data-i18n="min60">60 min</div>
-      </div>
     </div>
   </div>
 
@@ -606,6 +648,7 @@
       en: {
         title: "Glimmer",
         subtitle: "Dynamic Gesture & Power Management",
+        everydaySection: "Display & Haptics",
         gestureSection: "Gesture & Sleep Controls",
         flipLabel: "Flip to Sleep & Wake",
         flipDesc: "Turn the watch face-down to sleep; turn upright to wake instantly.",
@@ -620,6 +663,8 @@
         wakeVibeLabel: "Vibrate on Wake",
         wakeVibeDesc: "Vibrate briefly when waking up from sleep mode.",
         displaySection: "Display & Styling",
+        showSecondHandLabel: "Show Second Hand",
+        showSecondHandDesc: "Show the second hand for a few seconds after you look at the watch.",
         dateColorLabel: "Date & Day Text Color",
         dateColorDesc: "Choose any of the 64 Pebble SDK colors for the day and date.",
         hourColorLabel: "Hour Hand Color",
@@ -643,6 +688,7 @@
       ko: {
         title: "Glimmer",
         subtitle: "다이내믹 제스처 및 전력 관리",
+        everydaySection: "표시 및 진동",
         gestureSection: "모션 및 잠자기 제스처",
         flipLabel: "뒤집어서 잠자기 / 깨우기 (Flip)",
         flipDesc: "시계를 엎으면 잠들고, 다시 바로 돌려놓으면 즉시 깨어납니다.",
@@ -657,6 +703,8 @@
         wakeVibeLabel: "깨어날 때 진동",
         wakeVibeDesc: "잠에서 깨어날 때 짧게 진동합니다.",
         displaySection: "디스플레이 및 색상",
+        showSecondHandLabel: "초침 표시",
+        showSecondHandDesc: "시계를 본 직후 몇 초 동안 초침을 그립니다.",
         dateColorLabel: "요일 / 날짜 텍스트 색상",
         dateColorDesc: "다이얼에 표시되는 날짜와 요일의 색상을 선택합니다.",
         hourColorLabel: "시침 색상",
@@ -719,7 +767,8 @@
       sleep_tilt_angle: 80,
       wake_tilt_angle: 60,
       sleep_vibe: 0,
-      wake_vibe: 0
+      wake_vibe: 0,
+      show_second_hand: 1
     };
 
     // Pebble SDK 64-Color Palette Definitions
@@ -798,14 +847,45 @@
     }
 
     // Reusable Pebble Color Picker Component
+    var colorPickerInstances = [];
+
     function PebbleColorPicker(containerId, options) {
       var self = this;
       this.container = typeof containerId === 'string' ? document.getElementById(containerId) : containerId;
       this.options = options || {};
       this.value = parseInt(this.options.initialValue || 192, 10);
       this.onChange = this.options.onChange || function() {};
+      this.open = false;
       this.render();
+      colorPickerInstances.push(this);
     }
+
+    PebbleColorPicker.prototype.setOpen = function(open) {
+      this.open = !!open;
+      this.container.classList.toggle('is-open', this.open);
+      if (this.previewBar) {
+        this.previewBar.setAttribute('aria-expanded', this.open ? 'true' : 'false');
+      }
+      if (!this.open) {
+        this.updatePreview(this.value);
+      }
+    };
+
+    PebbleColorPicker.prototype.close = function() {
+      this.setOpen(false);
+    };
+
+    PebbleColorPicker.prototype.toggle = function() {
+      var willOpen = !this.open;
+      if (willOpen) {
+        colorPickerInstances.forEach(function(picker) {
+          if (picker !== this) {
+            picker.close();
+          }
+        }, this);
+      }
+      this.setOpen(willOpen);
+    };
 
     PebbleColorPicker.prototype.render = function() {
       var self = this;
@@ -814,6 +894,9 @@
 
       var previewBar = document.createElement('div');
       previewBar.className = 'color-preview-bar';
+      previewBar.setAttribute('role', 'button');
+      previewBar.setAttribute('tabindex', '0');
+      previewBar.setAttribute('aria-expanded', 'false');
 
       var swatch = document.createElement('div');
       swatch.className = 'color-preview-swatch';
@@ -833,9 +916,20 @@
       previewBar.appendChild(infoEl);
       this.container.appendChild(previewBar);
 
+      this.previewBar = previewBar;
       this.swatch = swatch;
       this.nameEl = nameEl;
       this.codeEl = codeEl;
+
+      previewBar.addEventListener('click', function() {
+        self.toggle();
+      });
+      previewBar.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          self.toggle();
+        }
+      });
 
       var grid = document.createElement('div');
       grid.className = 'color-matrix-grid';
@@ -852,8 +946,10 @@
         cell.title = info.name + ' (' + info.hex + ' / ' + info.c + ')';
 
         (function(a, inf, cEl) {
-          cEl.addEventListener('click', function() {
+          cEl.addEventListener('click', function(e) {
+            e.stopPropagation();
             self.setValue(a, true);
+            self.close();
           });
           cEl.addEventListener('mouseenter', function() {
             self.updatePreview(a);
@@ -870,6 +966,7 @@
 
       this.container.appendChild(grid);
       this.setValue(this.value, false);
+      this.setOpen(false);
     };
 
     PebbleColorPicker.prototype.updatePreview = function(argb) {
@@ -954,6 +1051,16 @@
       currentOptions.wake_tilt_angle = parseInt(this.value, 10);
     });
 
+    function updateFlipDependentControls() {
+      var enabled = document.getElementById('hibernate_face_down').checked;
+      document.getElementById('sleep-angle-row').classList.toggle('is-disabled', !enabled);
+      document.getElementById('wake-angle-row').classList.toggle('is-disabled', !enabled);
+      sleepSlider.disabled = !enabled;
+      wakeSlider.disabled = !enabled;
+    }
+
+    document.getElementById('hibernate_face_down').addEventListener('change', updateFlipDependentControls);
+
     // Interval Buttons
     var intervalBtns = document.querySelectorAll('.interval-btn');
     intervalBtns.forEach(function(btn) {
@@ -1020,6 +1127,10 @@
             document.getElementById('wake_vibe').checked = !!parseInt(obj.wake_vibe, 10);
           }
 
+          if (obj.show_second_hand !== undefined) {
+            document.getElementById('show_second_hand').checked = !!parseInt(obj.show_second_hand, 10);
+          }
+
           if (obj.sleep_tilt_angle) {
             sleepSlider.value = obj.sleep_tilt_angle;
             sleepBadge.textContent = obj.sleep_tilt_angle + '°';
@@ -1047,6 +1158,7 @@
       currentOptions.hibernate_face_up = document.getElementById('hibernate_face_up').checked ? 1 : 0;
       currentOptions.sleep_vibe = document.getElementById('sleep_vibe').checked ? 1 : 0;
       currentOptions.wake_vibe = document.getElementById('wake_vibe').checked ? 1 : 0;
+      currentOptions.show_second_hand = document.getElementById('show_second_hand').checked ? 1 : 0;
       currentOptions.sleep_tilt_angle = parseInt(sleepSlider.value, 10);
       currentOptions.wake_tilt_angle = parseInt(wakeSlider.value, 10);
 
@@ -1056,6 +1168,7 @@
 
     detectLanguage();
     loadOptions();
+    updateFlipDependentControls();
   </script>
 </body>
 </html>
