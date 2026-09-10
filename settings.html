@@ -406,34 +406,6 @@
       background-color: #000000;
     }
 
-    /* Update Interval Segment */
-    .interval-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
-      margin-top: 12px;
-    }
-
-    .interval-btn {
-      padding: 10px 4px;
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      color: var(--text-muted);
-      font-size: 12px;
-      font-weight: 600;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .interval-btn.active {
-      background: var(--accent);
-      color: #0f172a;
-      border-color: var(--accent);
-      font-weight: 700;
-    }
-
     /* Fixed Bottom Action Bar */
     .bottom-bar {
       position: fixed;
@@ -499,7 +471,7 @@
       <div class="header-version">v1.9</div>
     </div>
 
-    <!-- Section 1: Everyday — second hand, haptics, update interval -->
+    <!-- Section 1: Everyday — second hand, haptics -->
     <div class="section-title" data-i18n="everydaySection">Display & Haptics</div>
     <div class="card">
       <div class="card-row">
@@ -538,24 +510,50 @@
           <span class="slider-track"></span>
         </label>
       </div>
-
-      <div class="divider"></div>
-
-      <div class="card-label" data-i18n="updateIntervalLabel">Update Interval</div>
-      <div class="card-desc" data-i18n="updateIntervalDesc">0 min is ultra-power-saving (wakes only when checked).</div>
-
-      <div class="interval-grid" id="interval-group">
-        <div class="interval-btn active" data-interval="0" data-i18n="min0">0 min</div>
-        <div class="interval-btn" data-interval="5" data-i18n="min5">5 min</div>
-        <div class="interval-btn" data-interval="15" data-i18n="min15">15 min</div>
-        <div class="interval-btn" data-interval="30" data-i18n="min30">30 min</div>
-        <div class="interval-btn" data-interval="60" data-i18n="min60">60 min</div>
-      </div>
     </div>
 
     <!-- Section 2: Sleep gestures -->
     <div class="section-title" data-i18n="gestureSection">Gesture Controls</div>
     <div class="card">
+      <div class="card-row" id="touch-to-wake-row">
+        <div class="card-info">
+          <div class="card-label" data-i18n="touchToWakeLabel">Touch to Sleep / Wake (Toggle)</div>
+          <div class="card-desc" data-i18n="touchToWakeDesc">Tap the screen to sleep if awake, or wake if asleep.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="touch_to_wake">
+          <span class="slider-track"></span>
+        </label>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="card-row" id="shake-to-wake-row">
+        <div class="card-info">
+          <div class="card-label" data-i18n="shakeToWakeLabel">Shake to Wake</div>
+          <div class="card-desc" data-i18n="shakeToWakeDesc">Shake the watch to catch up the hands.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="shake_to_wake">
+          <span class="slider-track"></span>
+        </label>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-label" data-i18n="faceUpLabel">Sleep when Resting Face-Up</div>
+          <div class="card-desc" data-i18n="faceUpDesc">Enter sleep mode when placed flat face-up on a desk.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="hibernate_face_up">
+          <span class="slider-track"></span>
+        </label>
+      </div>
+
+      <div class="divider"></div>
+
       <div class="card-row">
         <div class="card-info">
           <div class="card-label" data-i18n="flipLabel">Flip to Sleep & Wake</div>
@@ -591,32 +589,6 @@
           <div class="badge-val" id="wake_angle_badge">60°</div>
         </div>
         <input type="range" id="wake_tilt_angle" min="30" max="75" step="5" value="60">
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="card-row">
-        <div class="card-info">
-          <div class="card-label" data-i18n="faceUpLabel">Sleep when Resting Face-Up</div>
-          <div class="card-desc" data-i18n="faceUpDesc">Enter sleep mode when placed flat face-up on a desk.</div>
-        </div>
-        <label class="switch">
-          <input type="checkbox" id="hibernate_face_up">
-          <span class="slider-track"></span>
-        </label>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="card-row" id="shake-to-wake-row">
-        <div class="card-info">
-          <div class="card-label" data-i18n="shakeToWakeLabel">Shake to Wake</div>
-          <div class="card-desc" data-i18n="shakeToWakeDesc">Shake the watch to wake from sleep. Unused while sleep is off — no tap sensor then.</div>
-        </div>
-        <label class="switch">
-          <input type="checkbox" id="shake_to_wake">
-          <span class="slider-track"></span>
-        </label>
       </div>
     </div>
 
@@ -677,7 +649,9 @@
         faceUpLabel: "Sleep when Resting Face-Up",
         faceUpDesc: "Enter sleep mode when placed flat face-up on a desk.",
         shakeToWakeLabel: "Shake to Wake",
-        shakeToWakeDesc: "Shake the watch to wake from sleep. Unused while sleep is off — no tap sensor then.",
+        shakeToWakeDesc: "Shake the watch to catch up the hands.",
+        touchToWakeLabel: "Touch to Sleep / Wake (Toggle)",
+        touchToWakeDesc: "Tap the screen to sleep if awake, or wake if asleep.",
         sleepVibeLabel: "Vibrate on Sleep",
         sleepVibeDesc: "Vibrate briefly when entering sleep mode.",
         wakeVibeLabel: "Vibrate on Wake",
@@ -695,13 +669,6 @@
         secondColorDesc: "Choose any of the 64 Pebble SDK colors for the second hand.",
         centerColorLabel: "Center Circle Color",
         centerColorDesc: "Choose any of the 64 Pebble SDK colors for the hands center circle.",
-        updateIntervalLabel: "Update Interval",
-        updateIntervalDesc: "0 min is ultra-power-saving (wakes only when checked).",
-        min0: "0 min",
-        min5: "5 min",
-        min15: "15 min",
-        min30: "30 min",
-        min60: "60 min",
         cancelBtn: "Cancel",
         saveBtn: "Save Settings"
       },
@@ -719,7 +686,9 @@
         faceUpLabel: "화면 위 수평 거치 시 잠자기 (Face-Up)",
         faceUpDesc: "시계 화면이 하늘을 향한 채 평평한 곳에 놓여있을 때 잠듭니다.",
         shakeToWakeLabel: "흔들어서 깨우기",
-        shakeToWakeDesc: "잠자는 중에만 흔들기로 깨어납니다. 잠자기가 꺼져 있으면 흔들기 센서를 켜지 않습니다.",
+        shakeToWakeDesc: "시계를 흔들면 바늘을 현재 시각으로 감습니다.",
+        touchToWakeLabel: "터치해서 재우기/깨우기 (토글)",
+        touchToWakeDesc: "깨어 있으면 잠들고, 자고 있으면 깨어납니다.",
         sleepVibeLabel: "잠들 때 진동",
         sleepVibeDesc: "잠자기 모드로 진입할 때 짧게 진동합니다.",
         wakeVibeLabel: "깨어날 때 진동",
@@ -737,13 +706,6 @@
         secondColorDesc: "다이얼에 표시되는 초침의 색상을 선택합니다.",
         centerColorLabel: "중앙 원 색상",
         centerColorDesc: "시계 바늘 중앙 원의 색상을 선택합니다.",
-        updateIntervalLabel: "주기적 시간 갱신 간격 (Update Interval)",
-        updateIntervalDesc: "0분은 볼 때만 깨어나는 초절전 모드입니다.",
-        min0: "0분",
-        min5: "5분",
-        min15: "15분",
-        min30: "30분",
-        min60: "60분",
         cancelBtn: "취소",
         saveBtn: "설정 저장"
       }
@@ -778,7 +740,6 @@
     }
 
     var currentOptions = {
-      update_interval: 0,
       date_color: 213,
       hour_color: 241,
       minute_color: 241,
@@ -791,7 +752,8 @@
       sleep_vibe: 0,
       wake_vibe: 0,
       show_second_hand: 1,
-      shake_to_wake: 0
+      shake_to_wake: 0,
+      touch_to_wake: 0
     };
 
     // Pebble SDK 64-Color Palette Definitions
@@ -1080,24 +1042,9 @@
       document.getElementById('wake-angle-row').classList.toggle('is-disabled', !flipOn);
       sleepSlider.disabled = !flipOn;
       wakeSlider.disabled = !flipOn;
-
-      var sleepOn = flipOn || document.getElementById('hibernate_face_up').checked;
-      document.getElementById('shake-to-wake-row').classList.toggle('is-disabled', !sleepOn);
-      document.getElementById('shake_to_wake').disabled = !sleepOn;
     }
 
     document.getElementById('hibernate_face_down').addEventListener('change', updateFlipDependentControls);
-    document.getElementById('hibernate_face_up').addEventListener('change', updateFlipDependentControls);
-
-    // Interval Buttons
-    var intervalBtns = document.querySelectorAll('.interval-btn');
-    intervalBtns.forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        intervalBtns.forEach(function(b) { b.classList.remove('active'); });
-        this.classList.add('active');
-        currentOptions.update_interval = parseInt(this.getAttribute('data-interval'), 10);
-      });
-    });
 
     // Load initial options from URL Hash
     function loadOptions() {
@@ -1106,13 +1053,6 @@
         if (hash) {
           var decoded = decodeURIComponent(hash);
           var obj = JSON.parse(decoded);
-          
-          if (obj.update_interval !== undefined) {
-            currentOptions.update_interval = parseInt(obj.update_interval, 10);
-            intervalBtns.forEach(function(btn) {
-              btn.classList.toggle('active', parseInt(btn.getAttribute('data-interval'), 10) === currentOptions.update_interval);
-            });
-          }
 
           if (obj.date_color) {
             currentOptions.date_color = parseInt(obj.date_color, 10);
@@ -1163,6 +1103,10 @@
             document.getElementById('shake_to_wake').checked = !!parseInt(obj.shake_to_wake, 10);
           }
 
+          if (obj.touch_to_wake !== undefined) {
+            document.getElementById('touch_to_wake').checked = !!parseInt(obj.touch_to_wake, 10);
+          }
+
           if (obj.sleep_tilt_angle) {
             sleepSlider.value = obj.sleep_tilt_angle;
             sleepBadge.textContent = obj.sleep_tilt_angle + '°';
@@ -1192,6 +1136,7 @@
       currentOptions.wake_vibe = document.getElementById('wake_vibe').checked ? 1 : 0;
       currentOptions.show_second_hand = document.getElementById('show_second_hand').checked ? 1 : 0;
       currentOptions.shake_to_wake = document.getElementById('shake_to_wake').checked ? 1 : 0;
+      currentOptions.touch_to_wake = document.getElementById('touch_to_wake').checked ? 1 : 0;
       currentOptions.sleep_tilt_angle = parseInt(sleepSlider.value, 10);
       currentOptions.wake_tilt_angle = parseInt(wakeSlider.value, 10);
 
