@@ -512,6 +512,19 @@
         </div>
         <input type="time" id="wake_time" class="time-input" style="background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; font-size: 15px; outline: none; font-family: inherit;">
       </div>
+
+      <div class="divider"></div>
+
+      <div class="card-row" id="wake_on_reappear_row">
+        <div class="card-info">
+          <div class="card-label" data-i18n="wakeOnReappearLabel">Wake Briefly on Reappear</div>
+          <div class="card-desc" data-i18n="wakeOnReappearDesc">When reappearing from notifications during sleep hours, briefly wake up to show the updated time via rolling animation before returning to sleep.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="wake_on_reappear" checked>
+          <span class="slider-track"></span>
+        </label>
+      </div>
       <div class="card-desc" style="margin-top: 10px; color: var(--accent); font-weight: 500;" data-i18n="sleepWakeNotice">※ Note: During sleep hours, launching the watch will display the updated time and then return to sleep. Outside this range, normal operation resumes.</div>
     </div>
 
@@ -578,6 +591,8 @@
         sleepTimeDesc: "Start time to enter deep sleep mode. Hands turn dark gray and all ticks stop.",
         wakeTimeLabel: "Wake Time (HH:MM)",
         wakeTimeDesc: "End time of sleep mode. Starting the watch outside this range resumes normal display.",
+        wakeOnReappearLabel: "Wake Briefly on Reappear",
+        wakeOnReappearDesc: "When reappearing from notifications during sleep hours, briefly wake up to show the updated time via rolling animation before returning to sleep.",
         sleepWakeNotice: "※ Note: Deep sleep mode is active within [Sleep Time ~ Wake Time]. If you launch the watch during sleep hours, the rolling animation will update and show the time, then return to sleep.",
         dateColorLabel: "Date & Day Text Color",
         dateColorDesc: "Choose any of the 64 Pebble SDK colors for the day and date.",
@@ -612,6 +627,8 @@
         sleepTimeDesc: "최대 전력 세이빙 모드에 들어갈 시작 시간을 설정합니다. 지정된 시각이 되면 시계 침이 다크 그레이로 바뀌고 초/분 틱이 모두 정지합니다.",
         wakeTimeLabel: "깨어나는 시간 (HH:MM)",
         wakeTimeDesc: "잠자기 모드가 끝나는 종료 시간을 설정합니다. 이 시간대 이후에 시계를 실행하면 정상 표시로 복귀합니다.",
+        wakeOnReappearLabel: "복귀 시 잠깐 깨어나기",
+        wakeOnReappearDesc: "수면 시간대라도 알림이 오거나 창이 닫혀 시계 화면으로 돌아올 때, 롤링 애니메이션으로 현재 시간을 확인한 후 다시 잠자기 모드로 들어갑니다.",
         sleepWakeNotice: "※ 안내: [잠자는 시간 ~ 깨어나는 시간] 범위 내에서는 최대 전력 세이빙 모드로 동작합니다. 잠자는 시간대에 시계를 작동시키면 롤링 애니메이션으로 현재 시간을 확인한 후 다시 잠자기 모드로 들어갑니다.",
         dateColorLabel: "요일 / 날짜 텍스트 색상",
         dateColorDesc: "다이얼에 표시되는 날짜와 요일의 색상을 선택합니다.",
@@ -670,6 +687,7 @@
       use_sleep: 0,
       sleep_time: "",
       wake_time: "",
+      wake_on_reappear: 1,
     };
 
     var currentOptions = Object.assign({}, DEFAULT_OPTIONS);
@@ -1050,6 +1068,12 @@
             currentOptions.wake_time = /^\d{1,2}:\d{2}$/.test(wt) ? wt : "";
             document.getElementById('wake_time').value = currentOptions.wake_time;
           }
+
+          if (obj.wake_on_reappear !== undefined) {
+            var wr = parseInt(obj.wake_on_reappear, 10);
+            currentOptions.wake_on_reappear = (wr === 0 || wr === 1) ? wr : DEFAULT_OPTIONS.wake_on_reappear;
+            document.getElementById('wake_on_reappear').checked = !!currentOptions.wake_on_reappear;
+          }
         }
       } catch (e) {
         console.error('Error loading options from hash:', e);
@@ -1083,6 +1107,8 @@
       var sleepTimeRow = document.getElementById('sleep_time_row');
       var wakeTimeInput = document.getElementById('wake_time');
       var wakeTimeRow = document.getElementById('wake_time_row');
+      var wakeOnReappearInput = document.getElementById('wake_on_reappear');
+      var wakeOnReappearRow = document.getElementById('wake_on_reappear_row');
 
       if (sleepTimeInput) {
         sleepTimeInput.disabled = !isSleepEnabled;
@@ -1095,6 +1121,12 @@
       }
       if (wakeTimeRow) {
         wakeTimeRow.classList.toggle('is-disabled', !isSleepEnabled);
+      }
+      if (wakeOnReappearInput) {
+        wakeOnReappearInput.disabled = !isSleepEnabled;
+      }
+      if (wakeOnReappearRow) {
+        wakeOnReappearRow.classList.toggle('is-disabled', !isSleepEnabled);
       }
     }
 
@@ -1127,6 +1159,7 @@
       currentOptions.sleep_time = (sleepInput && sleepInput.value) ? sleepInput.value.trim() : "";
       var wakeInput = document.getElementById('wake_time');
       currentOptions.wake_time = (wakeInput && wakeInput.value) ? wakeInput.value.trim() : "";
+      currentOptions.wake_on_reappear = document.getElementById('wake_on_reappear').checked ? 1 : 0;
 
       var returnTo = getQueryParam('return_to', 'pebblejs://close#');
       var sep = (returnTo.indexOf('#') === -1) ? '#' : '';
