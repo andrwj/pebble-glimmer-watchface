@@ -29,7 +29,7 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       background-color: var(--bg-primary);
-      background-image: 
+      background-image:
         radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
         radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.12) 0px, transparent 50%);
       background-attachment: fixed;
@@ -217,6 +217,40 @@
 
     input:checked + .slider-track:before {
       transform: translateX(22px);
+    }
+
+    .range-slider {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.15);
+      outline: none;
+      -webkit-appearance: none;
+      accent-color: var(--accent);
+      cursor: pointer;
+      margin-top: 4px;
+    }
+
+    .range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      border: 2px solid #ffffff;
+    }
+
+    .card-row.is-disabled {
+      opacity: 0.38;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .range-slider:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
     }
 
     /* Pebble 64-Color Picker Tool */
@@ -417,6 +451,19 @@
         </label>
       </div>
 
+      <div class="divider"></div>
+
+      <div class="card-row" id="maxcount_row" style="flex-direction: column; align-items: stretch; gap: 10px;">
+        <div class="card-info" style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div>
+            <div class="card-label" data-i18n="showSecondHandMaxcountLabel">Show Second Hand After Startup</div>
+            <div class="card-desc" data-i18n="showSecondHandMaxcountDesc">Number of seconds to display the second hand after rolling on startup before switching to minute updates. (0 to 60s)</div>
+          </div>
+          <span class="range-val" id="show_second_hand_maxcount_val" style="font-weight: 700; color: var(--accent); font-size: 16px; margin-left: 12px; white-space: nowrap; padding-top: 2px;">10s</span>
+        </div>
+        <input type="range" id="show_second_hand_maxcount" min="0" max="60" step="1" value="10" class="range-slider">
+      </div>
+
     </div>
 
     <!-- Section 3: Colors (all palettes together) -->
@@ -468,8 +515,11 @@
         everydaySection: "Display & Performance",
 
         displaySection: "Display & Styling",
-        showSecondHandLabel: "Show Second Hand",
-        showSecondHandDesc: "When enabled, the second hand runs every second. When disabled, the watch updates once per minute to save battery.",
+        showSecondHandLabel: "Always Show Second Hand",
+        showSecondHandDesc: "When enabled, the second hand always runs every second. When disabled, the second hand is only displayed for the configured seconds after startup, then updates once per minute to save battery.",
+        showSecondHandMaxcountLabel: "Show Second Hand After Startup",
+        showSecondHandMaxcountDesc: "Duration (in seconds) to display the second hand after rolling on startup before switching to minute updates. (0 to 60s)",
+        secUnit: "s",
         dateColorLabel: "Date & Day Text Color",
         dateColorDesc: "Choose any of the 64 Pebble SDK colors for the day and date.",
         hourColorLabel: "Hour Hand Color",
@@ -489,8 +539,11 @@
         everydaySection: "디스플레이 및 성능",
 
         displaySection: "디스플레이 및 색상",
-        showSecondHandLabel: "초침 표시",
-        showSecondHandDesc: "켜짐 시 초침이 1초마다 실시간으로 표시됩니다. 꺼짐 시 1분 단위로 갱신되어 배터리를 크게 절약합니다.",
+        showSecondHandLabel: "항상 초침 표시하기",
+        showSecondHandDesc: "켜짐 시 초침이 항상 초 단위로 계속 동작합니다. 꺼짐 시 시계 시작 후 설정된 시간 동안만 초침을 표시한 뒤 1분 단위 갱신으로 전환하여 배터리를 절약합니다.",
+        showSecondHandMaxcountLabel: "앱 시작후 초침 표시",
+        showSecondHandMaxcountDesc: "시계 시작 시 롤링 완료 후 초침을 표시할 시간(초)을 설정합니다. (0~60초, 0 설정 시 즉시 분 단위 갱신)",
+        secUnit: "초",
         dateColorLabel: "요일 / 날짜 텍스트 색상",
         dateColorDesc: "다이얼에 표시되는 날짜와 요일의 색상을 선택합니다.",
         hourColorLabel: "시침 색상",
@@ -522,6 +575,8 @@
           el.textContent = dict[key];
         }
       });
+
+      updateMaxcountDisplay(currentOptions.show_second_hand_maxcount);
     }
 
     // Auto-detect browser/phone language
@@ -534,14 +589,25 @@
       }
     }
 
-    var currentOptions = {
-      date_color: 213,
-      hour_color: 241,
-      minute_color: 241,
-      second_color: 192,
-      center_color: 241,
+    var DEFAULT_OPTIONS = {
+      date_color: 213,       // c_DarkGray
+      hour_color: 241,       // c_Folly
+      minute_color: 241,     // c_Folly
+      second_color: 192,     // c_Black
+      center_color: 241,     // c_Folly
       show_second_hand: 1,
+      show_second_hand_maxcount: 10,
     };
+
+    var currentOptions = Object.assign({}, DEFAULT_OPTIONS);
+
+    function updateMaxcountDisplay(val) {
+      var unit = (i18nData[currentLang] || i18nData['en']).secUnit || 's';
+      var valEl = document.getElementById('show_second_hand_maxcount_val');
+      if (valEl) {
+        valEl.textContent = val + unit;
+      }
+    }
 
     // Pebble SDK 64-Color Palette Definitions
     var PEBBLE_COLOR_NAMES = {
@@ -625,7 +691,8 @@
       var self = this;
       this.container = typeof containerId === 'string' ? document.getElementById(containerId) : containerId;
       this.options = options || {};
-      this.value = parseInt(this.options.initialValue || 192, 10);
+      this.defaultValue = parseInt(this.options.initialValue !== undefined ? this.options.initialValue : 192, 10);
+      this.value = this.defaultValue;
       this.onChange = this.options.onChange || function() {};
       this.open = false;
       this.render();
@@ -751,7 +818,7 @@
     PebbleColorPicker.prototype.setValue = function(argb, triggerChange) {
       var num = parseInt(argb, 10);
       if (!PEBBLE_COLOR_NAMES[num]) {
-        num = 192;
+        num = this.defaultValue;
       }
       this.value = num;
 
@@ -774,35 +841,35 @@
 
     // Initialize Color Pickers
     var dateColorPicker = new PebbleColorPicker('date_color_picker', {
-      initialValue: currentOptions.date_color,
+      initialValue: DEFAULT_OPTIONS.date_color,
       onChange: function(val) {
         currentOptions.date_color = val;
       }
     });
 
     var hourColorPicker = new PebbleColorPicker('hour_color_picker', {
-      initialValue: currentOptions.hour_color,
+      initialValue: DEFAULT_OPTIONS.hour_color,
       onChange: function(val) {
         currentOptions.hour_color = val;
       }
     });
 
     var minuteColorPicker = new PebbleColorPicker('minute_color_picker', {
-      initialValue: currentOptions.minute_color,
+      initialValue: DEFAULT_OPTIONS.minute_color,
       onChange: function(val) {
         currentOptions.minute_color = val;
       }
     });
 
     var secondColorPicker = new PebbleColorPicker('second_color_picker', {
-      initialValue: currentOptions.second_color,
+      initialValue: DEFAULT_OPTIONS.second_color,
       onChange: function(val) {
         currentOptions.second_color = val;
       }
     });
 
     var centerColorPicker = new PebbleColorPicker('center_color_picker', {
-      initialValue: currentOptions.center_color,
+      initialValue: DEFAULT_OPTIONS.center_color,
       onChange: function(val) {
         currentOptions.center_color = val;
       }
@@ -845,38 +912,75 @@
           }
 
           if (obj.date_color !== undefined) {
-            currentOptions.date_color = parseInt(obj.date_color, 10);
+            var dc = parseInt(obj.date_color, 10);
+            currentOptions.date_color = PEBBLE_COLOR_NAMES[dc] ? dc : DEFAULT_OPTIONS.date_color;
             dateColorPicker.setValue(currentOptions.date_color, false);
           }
 
           if (obj.hour_color !== undefined) {
-            currentOptions.hour_color = parseInt(obj.hour_color, 10);
+            var hc = parseInt(obj.hour_color, 10);
+            currentOptions.hour_color = PEBBLE_COLOR_NAMES[hc] ? hc : DEFAULT_OPTIONS.hour_color;
             hourColorPicker.setValue(currentOptions.hour_color, false);
           }
 
           if (obj.minute_color !== undefined) {
-            currentOptions.minute_color = parseInt(obj.minute_color, 10);
+            var mc = parseInt(obj.minute_color, 10);
+            currentOptions.minute_color = PEBBLE_COLOR_NAMES[mc] ? mc : DEFAULT_OPTIONS.minute_color;
             minuteColorPicker.setValue(currentOptions.minute_color, false);
           }
 
           if (obj.second_color !== undefined) {
-            currentOptions.second_color = parseInt(obj.second_color, 10);
+            var sc = parseInt(obj.second_color, 10);
+            currentOptions.second_color = PEBBLE_COLOR_NAMES[sc] ? sc : DEFAULT_OPTIONS.second_color;
             secondColorPicker.setValue(currentOptions.second_color, false);
           }
 
           if (obj.center_color !== undefined) {
-            currentOptions.center_color = parseInt(obj.center_color, 10);
+            var cc = parseInt(obj.center_color, 10);
+            currentOptions.center_color = PEBBLE_COLOR_NAMES[cc] ? cc : DEFAULT_OPTIONS.center_color;
             centerColorPicker.setValue(currentOptions.center_color, false);
           }
 
           if (obj.show_second_hand !== undefined) {
-            document.getElementById('show_second_hand').checked = !!parseInt(obj.show_second_hand, 10);
+            var sh = parseInt(obj.show_second_hand, 10);
+            currentOptions.show_second_hand = (sh === 0 || sh === 1) ? sh : DEFAULT_OPTIONS.show_second_hand;
+            document.getElementById('show_second_hand').checked = !!currentOptions.show_second_hand;
+          }
+
+          if (obj.show_second_hand_maxcount !== undefined) {
+            var mc = parseInt(obj.show_second_hand_maxcount, 10);
+            currentOptions.show_second_hand_maxcount = (!isNaN(mc) && mc >= 0 && mc <= 60) ? mc : DEFAULT_OPTIONS.show_second_hand_maxcount;
+            document.getElementById('show_second_hand_maxcount').value = currentOptions.show_second_hand_maxcount;
+            updateMaxcountDisplay(currentOptions.show_second_hand_maxcount);
           }
         }
       } catch (e) {
         console.error('Error loading options from hash:', e);
       }
     }
+
+    function updateSecondHandDependency() {
+      var isAlwaysOn = document.getElementById('show_second_hand').checked;
+      var maxcountInput = document.getElementById('show_second_hand_maxcount');
+      var maxcountRow = document.getElementById('maxcount_row');
+
+      if (maxcountInput) {
+        maxcountInput.disabled = isAlwaysOn;
+      }
+      if (maxcountRow) {
+        maxcountRow.classList.toggle('is-disabled', isAlwaysOn);
+      }
+    }
+
+    // Range slider event
+    document.getElementById('show_second_hand_maxcount').addEventListener('input', function(e) {
+      currentOptions.show_second_hand_maxcount = parseInt(e.target.value, 10);
+      updateMaxcountDisplay(currentOptions.show_second_hand_maxcount);
+    });
+
+    document.getElementById('show_second_hand').addEventListener('change', function() {
+      updateSecondHandDependency();
+    });
 
     // Buttons
     document.getElementById('btn-cancel').addEventListener('click', function() {
@@ -886,6 +990,7 @@
 
     document.getElementById('btn-save').addEventListener('click', function() {
       currentOptions.show_second_hand = document.getElementById('show_second_hand').checked ? 1 : 0;
+      currentOptions.show_second_hand_maxcount = parseInt(document.getElementById('show_second_hand_maxcount').value, 10);
 
       var returnTo = getQueryParam('return_to', 'pebblejs://close#');
       var sep = (returnTo.indexOf('#') === -1) ? '#' : '';
@@ -895,6 +1000,7 @@
 
     detectLanguage();
     loadOptions();
+    updateSecondHandDependency();
   </script>
 </body>
 </html>
