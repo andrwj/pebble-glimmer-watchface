@@ -464,6 +464,19 @@
         <input type="range" id="show_second_hand_maxcount" min="0" max="60" step="1" value="10" class="range-slider">
       </div>
 
+      <div class="divider"></div>
+
+      <div class="card-row" id="reappear_row">
+        <div class="card-info">
+          <div class="card-label" data-i18n="showSecondHandOnReappearLabel">Show Second Hand On Reappear</div>
+          <div class="card-desc" data-i18n="showSecondHandOnReappearDesc">When the watchface reappears after being obscured by notifications or other windows, show the second hand again for the configured duration.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="show_second_hand_on_reappear" checked>
+          <span class="slider-track"></span>
+        </label>
+      </div>
+
     </div>
 
     <!-- Section 3: Colors (all palettes together) -->
@@ -520,6 +533,8 @@
         showSecondHandMaxcountLabel: "Show Second Hand After Startup",
         showSecondHandMaxcountDesc: "Duration (in seconds) to display the second hand after rolling on startup before switching to minute updates. (0 to 60s)",
         secUnit: "s",
+        showSecondHandOnReappearLabel: "Show Second Hand On Reappear",
+        showSecondHandOnReappearDesc: "When the watchface reappears after being obscured by notifications or other windows, show the second hand again for the configured duration.",
         dateColorLabel: "Date & Day Text Color",
         dateColorDesc: "Choose any of the 64 Pebble SDK colors for the day and date.",
         hourColorLabel: "Hour Hand Color",
@@ -544,6 +559,8 @@
         showSecondHandMaxcountLabel: "앱 시작후 초침 표시",
         showSecondHandMaxcountDesc: "시계 시작 시 롤링 완료 후 초침을 표시할 시간(초)을 설정합니다. (0~60초, 0 설정 시 즉시 분 단위 갱신)",
         secUnit: "초",
+        showSecondHandOnReappearLabel: "앱 복귀 시 초침 표시",
+        showSecondHandOnReappearDesc: "알림이나 다른 화면으로 앱이 가려졌다가 다시 나타날 때, 설정된 시간 동안 초침을 다시 표시합니다.",
         dateColorLabel: "요일 / 날짜 텍스트 색상",
         dateColorDesc: "다이얼에 표시되는 날짜와 요일의 색상을 선택합니다.",
         hourColorLabel: "시침 색상",
@@ -597,6 +614,7 @@
       center_color: 241,     // c_Folly
       show_second_hand: 1,
       show_second_hand_maxcount: 10,
+      show_second_hand_on_reappear: 1,
     };
 
     var currentOptions = Object.assign({}, DEFAULT_OPTIONS);
@@ -953,6 +971,12 @@
             document.getElementById('show_second_hand_maxcount').value = currentOptions.show_second_hand_maxcount;
             updateMaxcountDisplay(currentOptions.show_second_hand_maxcount);
           }
+
+          if (obj.show_second_hand_on_reappear !== undefined) {
+            var reap = parseInt(obj.show_second_hand_on_reappear, 10);
+            currentOptions.show_second_hand_on_reappear = (reap === 0 || reap === 1) ? reap : DEFAULT_OPTIONS.show_second_hand_on_reappear;
+            document.getElementById('show_second_hand_on_reappear').checked = !!currentOptions.show_second_hand_on_reappear;
+          }
         }
       } catch (e) {
         console.error('Error loading options from hash:', e);
@@ -963,12 +987,20 @@
       var isAlwaysOn = document.getElementById('show_second_hand').checked;
       var maxcountInput = document.getElementById('show_second_hand_maxcount');
       var maxcountRow = document.getElementById('maxcount_row');
+      var reappearInput = document.getElementById('show_second_hand_on_reappear');
+      var reappearRow = document.getElementById('reappear_row');
 
       if (maxcountInput) {
         maxcountInput.disabled = isAlwaysOn;
       }
       if (maxcountRow) {
         maxcountRow.classList.toggle('is-disabled', isAlwaysOn);
+      }
+      if (reappearInput) {
+        reappearInput.disabled = isAlwaysOn;
+      }
+      if (reappearRow) {
+        reappearRow.classList.toggle('is-disabled', isAlwaysOn);
       }
     }
 
@@ -991,6 +1023,7 @@
     document.getElementById('btn-save').addEventListener('click', function() {
       currentOptions.show_second_hand = document.getElementById('show_second_hand').checked ? 1 : 0;
       currentOptions.show_second_hand_maxcount = parseInt(document.getElementById('show_second_hand_maxcount').value, 10);
+      currentOptions.show_second_hand_on_reappear = document.getElementById('show_second_hand_on_reappear').checked ? 1 : 0;
 
       var returnTo = getQueryParam('return_to', 'pebblejs://close#');
       var sep = (returnTo.indexOf('#') === -1) ? '#' : '';
