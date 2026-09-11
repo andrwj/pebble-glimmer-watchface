@@ -253,6 +253,94 @@
       opacity: 0.5;
     }
 
+    .sub-btn {
+      flex: 1;
+      padding: 8px 12px;
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sub-btn.active {
+      background: var(--accent);
+      color: #0b0f19;
+      border-color: var(--accent);
+      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
+    }
+    .value-badge {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.1);
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+    .select-input {
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 14px;
+      outline: none;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .text-input {
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 14px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    /* Test & Preview Buttons */
+    .test-btn {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      outline: none;
+    }
+    .test-btn-audio {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%);
+      color: #38bdf8;
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+    .test-btn-audio:hover {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.25) 0%, rgba(99, 102, 241, 0.25) 100%);
+      border-color: #38bdf8;
+      transform: translateY(-1px);
+    }
+    .test-btn-audio.is-playing {
+      background: var(--accent-gradient);
+      color: #0b0f19;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.5);
+      animation: pulse-ring 1.5s infinite;
+    }
+
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.6); }
+      70% { box-shadow: 0 0 0 10px rgba(56, 189, 248, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+    }
+
     /* Pebble 64-Color Picker Tool */
     .pebble-color-picker-tool {
       margin-top: 10px;
@@ -434,7 +522,7 @@
       </div>
       <h1 data-i18n="title">Glimmer</h1>
       <p data-i18n="subtitle">Minimal Orbit Watchface</p>
-      <div class="header-version" id="header_version">v2.0</div>
+      <div class="header-version" id="header_version">v2.1</div>
     </div>
 
     <!-- Section 1: Everyday — second hand, haptics -->
@@ -528,6 +616,117 @@
       <div class="card-desc" style="margin-top: 10px; color: var(--accent); font-weight: 500;" data-i18n="sleepWakeNotice">※ Note: During sleep hours, launching the watch will display the updated time and then return to sleep. Outside this range, normal operation resumes.</div>
     </div>
 
+    <!-- Section: Hourly Chime -->
+    <div class="section-title" data-i18n="chimeSection">Hourly Chime</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-label" data-i18n="chimeScheduleLabel">Chime Schedule</div>
+          <div class="card-desc" data-i18n="chimeScheduleDesc">Choose every hour on the hour, or specify minutes separated by commas.</div>
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px; margin: 12px 0 8px;">
+        <button type="button" id="btn_chime_hourly" class="sub-btn active" data-i18n="chimeEveryHour">Every Hour (:00)</button>
+        <button type="button" id="btn_chime_custom" class="sub-btn" data-i18n="chimeCustom">Custom Minutes</button>
+      </div>
+      <div id="custom_schedule_row" style="display: none; margin-top: 10px;">
+        <div class="card-desc" style="margin-bottom: 6px;" data-i18n="chimeInputDesc">e.g. 1, 2, 3 (Hours) | 1:15, 2, 3:34 (Exact) | :20 (Every hour at :20) - Max 5 entries (4 commas)</div>
+        <div id="chime_error_msg" style="display: none; color: #ef4444; font-size: 12px; font-weight: 600; margin-bottom: 6px; padding: 6px 10px; background: rgba(239, 68, 68, 0.1); border-radius: 6px; border: 1px solid rgba(239, 68, 68, 0.25);"></div>
+        <input type="text" id="chime_schedule" class="text-input" placeholder="e.g. 1:15, 2, 3:34, :20" style="width: 100%;">
+        <div id="chime_parsed_preview" style="font-size: 12px; color: var(--accent); margin-top: 6px; font-weight: 500;"></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-label" data-i18n="chimeMorseLabel">Hourly Chime in Morse Code</div>
+          <div class="card-desc" data-i18n="chimeMorseDesc">Play the current time (24H HHMM) in Morse code using the watch speaker on scheduled minutes.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="hourly_chime_morse">
+          <span class="slider-track"></span>
+        </label>
+      </div>
+
+      <div id="sound_level_row" style="display: none;">
+        <div class="divider"></div>
+        <div class="card-row">
+          <div class="card-info">
+            <div class="card-label" data-i18n="chimeSoundLevelLabel">Sound Level</div>
+            <div class="card-desc" data-i18n="chimeSoundLevelDesc">Adjust speaker volume level from 1 (quiet) to 10 (loud).</div>
+          </div>
+          <div class="value-badge" id="sound_level_val">7</div>
+        </div>
+        <input type="range" id="chime_sound_level" min="1" max="10" step="1" value="7" class="range-slider">
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-label" data-i18n="chimeVibeLabel">Hourly Chime by Vibration</div>
+          <div class="card-desc" data-i18n="chimeVibeDesc">Vibrate on scheduled minutes.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="hourly_chime_vibe">
+          <span class="slider-track"></span>
+        </label>
+      </div>
+
+      <div id="vibe_options_block" style="display: none;">
+        <div class="divider"></div>
+        <div class="card-row">
+          <div class="card-info">
+            <div class="card-label" data-i18n="chimeVibeStyleLabel">Vibration Style</div>
+            <div class="card-desc" data-i18n="chimeVibeStyleDesc">Select vibration pattern.</div>
+          </div>
+          <select id="chime_vibe_style" class="select-input">
+            <option value="0" data-i18n="vibeStyleSingle">Single Pulse</option>
+            <option value="1" data-i18n="vibeStyleDouble">Double Pulse</option>
+            <option value="2" data-i18n="vibeStyleTriple">Triple Pulse</option>
+            <option value="3" data-i18n="vibeStyleCrisp">Crisp Tick</option>
+            <option value="4" data-i18n="vibeStyleMorse">Morse Code Vibe</option>
+          </select>
+        </div>
+
+        <div class="divider"></div>
+        <div class="card-row">
+          <div class="card-info">
+            <div class="card-label" data-i18n="chimeVibeStrengthLabel">Vibration Strength</div>
+            <div class="card-desc" data-i18n="chimeVibeStrengthDesc">Adjust vibration intensity (1 to 5).</div>
+          </div>
+          <div class="value-badge" id="vibe_strength_val">3</div>
+        </div>
+        <input type="range" id="chime_vibe_strength" min="1" max="5" step="1" value="3" class="range-slider">
+      </div>
+
+      <!-- Preview & Test Panel -->
+      <div class="divider"></div>
+      <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 12px; padding: 14px; margin-top: 6px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div style="font-size: 13px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px;" data-i18n="testChimeTitle">Instant Sound Preview</div>
+          <span id="test_status_badge" style="font-size: 11px; padding: 2px 8px; border-radius: 999px; background: rgba(148, 163, 184, 0.15); color: var(--text-muted); font-weight: 600;" data-i18n="testStatusReady">Ready</span>
+        </div>
+        <div class="card-desc" style="margin-bottom: 12px;" data-i18n="testChimeDesc">Test current Morse code sound with selected sound level right now on your device.</div>
+
+        <button type="button" id="btn_test_audio" class="test-btn test-btn-audio">
+          <span class="btn-icon">🔊</span>
+          <span id="txt_test_audio" data-i18n="btnTestAudio">Play Morse Code</span>
+        </button>
+
+        <div id="morse_visualizer" style="display: none; margin-top: 12px; padding: 12px; background: rgba(0, 0, 0, 0.55); border-radius: 10px; border: 1px solid rgba(56, 189, 248, 0.25); user-select: text; -webkit-user-select: text;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 6px;">
+            <span id="morse_time_display" style="font-size: 13px; font-weight: 700; color: var(--accent);"></span>
+            <span style="font-size: 11px; color: var(--text-muted);">24H HHMM</span>
+          </div>
+          <div id="morse_code_display" style="font-family: 'SFMono-Regular', Consolas, Menlo, Monaco, monospace; font-size: 15px; letter-spacing: 2px; color: #f8fafc; line-height: 1.6; word-break: break-all; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 2px 0;"></div>
+        </div>
+      </div>
+
+      <div class="card-desc" style="margin-top: 10px; color: var(--accent); font-weight: 500;" data-i18n="chimeSleepNotice">※ Note: Hourly chimes are automatically silenced while Glimmer is sleeping.</div>
+    </div>
+
     <!-- Section 3: Colors (all palettes together) -->
     <div class="section-title" data-i18n="displaySection">Display & Styling</div>
     <div class="card">
@@ -594,6 +793,41 @@
         wakeOnReappearLabel: "Wake Briefly on Reappear",
         wakeOnReappearDesc: "When reappearing from notifications during sleep hours, briefly wake up to show the updated time via rolling animation before returning to sleep.",
         sleepWakeNotice: "※ Note: Deep sleep mode is active within [Sleep Time ~ Wake Time]. If you launch the watch during sleep hours, the rolling animation will update and show the time, then return to sleep.",
+        chimeSection: "Hourly Chime",
+        chimeScheduleLabel: "Chime Schedule",
+        chimeScheduleDesc: "Choose every hour on the hour, or specify minutes separated by commas.",
+        chimeEveryHour: "Every Hour (:00)",
+        chimeCustom: "Custom Minutes",
+        chimeInputDesc: "Format: 1, 2, 3 (hours) | 1:15, 2, 3:34 (exact) | :20 (every hour at :20). Max 5 items (4 commas).",
+        chimeErrCommaLimit: "Error: Maximum 4 commas allowed (up to 5 items only).",
+        chimeErrInvalidFormat: "Error: Invalid format. Use 'H' (e.g. 1), 'H:M' (e.g. 1:15), or ':M' (e.g. :20).",
+        chimeErrInvalidRange: "Error: Time out of range. Hours must be 0~23, minutes 0~59.",
+        chimeErrEmptyItem: "Error: Empty item detected between commas.",
+        chimeMorseLabel: "Hourly Chime in Morse Code",
+        chimeMorseDesc: "Play the current time (24H HHMM) in Morse code using the watch speaker on scheduled minutes.",
+        chimeSoundLevelLabel: "Sound Level",
+        chimeSoundLevelDesc: "Adjust speaker volume level from 1 (quiet) to 10 (loud).",
+        chimeVibeLabel: "Hourly Chime by Vibration",
+        chimeVibeDesc: "Vibrate on scheduled minutes.",
+        chimeVibeStyleLabel: "Vibration Style",
+        chimeVibeStyleDesc: "Select vibration pattern.",
+        vibeStyleSingle: "Single Pulse (1x)",
+        vibeStyleDouble: "Double Pulse (2x)",
+        vibeStyleTriple: "Triple Pulse (3x)",
+        vibeStyleCrisp: "Crisp Tick",
+        vibeStyleMorse: "Morse Code Vibe",
+        chimeVibeStrengthLabel: "Vibration Strength",
+        chimeVibeStrengthDesc: "Adjust vibration intensity (1 to 5).",
+        chimeSleepNotice: "※ Note: Hourly chimes are automatically silenced while Glimmer is sleeping.",
+        chimePreviewPrefix: "Scheduled at: Every hour at ",
+        chimePreviewEmpty: "No valid minutes entered (chime will not sound)",
+        chimeMinuteUnit: "m",
+        testChimeTitle: "Instant Sound Preview",
+        testStatusReady: "Ready",
+        testStatusPlaying: "Playing...",
+        testChimeDesc: "Test current Morse code sound with selected sound level right now on your device.",
+        btnTestAudio: "Play Morse Code",
+        btnStopAudio: "Stop Morse Code",
         dateColorLabel: "Date & Day Text Color",
         dateColorDesc: "Choose any of the 64 Pebble SDK colors for the day and date.",
         hourColorLabel: "Hour Hand Color",
@@ -630,6 +864,41 @@
         wakeOnReappearLabel: "복귀 시 잠깐 깨어나기",
         wakeOnReappearDesc: "수면 시간대라도 알림이 오거나 창이 닫혀 시계 화면으로 돌아올 때, 롤링 애니메이션으로 현재 시간을 확인한 후 다시 잠자기 모드로 들어갑니다.",
         sleepWakeNotice: "※ 안내: [잠자는 시간 ~ 깨어나는 시간] 범위 내에서는 최대 전력 세이빙 모드로 동작합니다. 잠자는 시간대에 시계를 작동시키면 롤링 애니메이션으로 현재 시간을 확인한 후 다시 잠자기 모드로 들어갑니다.",
+        chimeSection: "정시 알림",
+        chimeScheduleLabel: "알림 시각 설정",
+        chimeScheduleDesc: "매 시간 정각마다 울리거나, 쉼표로 구분하여 특정 분(0~59)에 울리도록 설정합니다.",
+        chimeEveryHour: "매 시간마다 (:00)",
+        chimeCustom: "직접 입력",
+        chimeInputDesc: "형식: 1, 2, 3 (시 정각) | 1:15, 2, 3:34 (특정 시분) | :20 (매 시간 20분). 최대 5개 항목 (콤마 4개까지).",
+        chimeErrCommaLimit: "오류: 콤마는 최대 4개까지만 허용됩니다 (최대 5개 항목).",
+        chimeErrInvalidFormat: "오류: 올바르지 않은 형식입니다. 'H'(예: 1), 'H:M'(예: 1:15), ':M'(예: :20) 형식을 사용하세요.",
+        chimeErrInvalidRange: "오류: 시간 범위를 초과했습니다. 시(0~23), 분(0~59)을 확인하세요.",
+        chimeErrEmptyItem: "오류: 콤마 사이에 비어 있는 항목이 있습니다.",
+        chimeMorseLabel: "모르스코드로 정시 알림",
+        chimeMorseDesc: "지정된 시각에 시계 내장 스피커로 24시간 형식(HHMM)의 모스 부호를 출력합니다.",
+        chimeSoundLevelLabel: "소리 크기",
+        chimeSoundLevelDesc: "스피커 소리 크기를 1(작게)부터 10(크게)까지 조절합니다.",
+        chimeVibeLabel: "진동으로 정시 알림",
+        chimeVibeDesc: "지정된 시각에 진동으로 시간을 알립니다.",
+        chimeVibeStyleLabel: "진동 형태",
+        chimeVibeStyleDesc: "알림 시 울릴 진동 패턴을 선택합니다.",
+        vibeStyleSingle: "단순 펄스 (1회)",
+        vibeStyleDouble: "더블 펄스 (2회)",
+        vibeStyleTriple: "트리플 펄스 (3회)",
+        vibeStyleCrisp: "산뜻한 틱",
+        vibeStyleMorse: "모르스 부호 진동",
+        chimeVibeStrengthLabel: "진동 세기",
+        chimeVibeStrengthDesc: "진동 세기를 1단계부터 5단계까지 조절합니다.",
+        chimeSleepNotice: "※ 안내: 시계가 잠자기 모드일 때는 정시 알림이 자동으로 울리지 않습니다.",
+        chimePreviewPrefix: "알림 예정 시각: 매시 ",
+        chimePreviewEmpty: "입력된 시각 없음 (알림이 울리지 않습니다)",
+        chimeMinuteUnit: "분",
+        testChimeTitle: "실시간 사운드 미리듣기",
+        testStatusReady: "대기",
+        testStatusPlaying: "재생 중...",
+        testChimeDesc: "설정 중인 소리 크기로 모스 부호 사운드를 지금 바로 이 화면에서 미리 들어보세요.",
+        btnTestAudio: "모르스 사운드 재생",
+        btnStopAudio: "사운드 정지",
         dateColorLabel: "요일 / 날짜 텍스트 색상",
         dateColorDesc: "다이얼에 표시되는 날짜와 요일의 색상을 선택합니다.",
         hourColorLabel: "시침 색상",
@@ -688,6 +957,15 @@
       sleep_time: "",
       wake_time: "",
       wake_on_reappear: 1,
+      hourly_chime_morse: 0,
+      chime_sound_level: 7,
+      hourly_chime_vibe: 0,
+      chime_vibe_style: 0,
+      chime_vibe_strength: 3,
+      chime_schedule: "0",
+      chime_mode: 0,
+      chime_mask_low: 1,
+      chime_mask_high: 0,
     };
 
     var currentOptions = Object.assign({}, DEFAULT_OPTIONS);
@@ -1074,6 +1352,56 @@
             currentOptions.wake_on_reappear = (wr === 0 || wr === 1) ? wr : DEFAULT_OPTIONS.wake_on_reappear;
             document.getElementById('wake_on_reappear').checked = !!currentOptions.wake_on_reappear;
           }
+
+          if (obj.hourly_chime_morse !== undefined) {
+            var hm = parseInt(obj.hourly_chime_morse, 10);
+            currentOptions.hourly_chime_morse = (hm === 1) ? 1 : 0;
+            document.getElementById('hourly_chime_morse').checked = !!currentOptions.hourly_chime_morse;
+          }
+
+          if (obj.chime_sound_level !== undefined) {
+            var sl = parseInt(obj.chime_sound_level, 10);
+            currentOptions.chime_sound_level = (!isNaN(sl) && sl >= 1 && sl <= 10) ? sl : DEFAULT_OPTIONS.chime_sound_level;
+            document.getElementById('chime_sound_level').value = currentOptions.chime_sound_level;
+            updateSoundLevelDisplay(currentOptions.chime_sound_level);
+          }
+
+          if (obj.hourly_chime_vibe !== undefined) {
+            var hv = parseInt(obj.hourly_chime_vibe, 10);
+            currentOptions.hourly_chime_vibe = (hv === 1) ? 1 : 0;
+            document.getElementById('hourly_chime_vibe').checked = !!currentOptions.hourly_chime_vibe;
+          }
+
+          if (obj.chime_vibe_style !== undefined) {
+            var vs = parseInt(obj.chime_vibe_style, 10);
+            currentOptions.chime_vibe_style = (!isNaN(vs) && vs >= 0 && vs <= 4) ? vs : DEFAULT_OPTIONS.chime_vibe_style;
+            document.getElementById('chime_vibe_style').value = currentOptions.chime_vibe_style;
+          }
+
+          if (obj.chime_vibe_strength !== undefined) {
+            var vst = parseInt(obj.chime_vibe_strength, 10);
+            currentOptions.chime_vibe_strength = (!isNaN(vst) && vst >= 1 && vst <= 5) ? vst : DEFAULT_OPTIONS.chime_vibe_strength;
+            document.getElementById('chime_vibe_strength').value = currentOptions.chime_vibe_strength;
+            updateVibeStrengthDisplay(currentOptions.chime_vibe_strength);
+          }
+
+          if (obj.chime_mode !== undefined) {
+            var cm = parseInt(obj.chime_mode, 10);
+            currentOptions.chime_mode = (cm === 1) ? 1 : 0;
+          } else if (obj.chime_schedule && obj.chime_schedule !== '0') {
+            currentOptions.chime_mode = 1;
+          } else {
+            currentOptions.chime_mode = 0;
+          }
+
+          if (obj.chime_schedule !== undefined) {
+            currentOptions.chime_schedule = String(obj.chime_schedule).trim();
+            document.getElementById('chime_schedule').value = (currentOptions.chime_schedule === '0') ? '' : currentOptions.chime_schedule;
+          }
+
+          setChimeMode(currentOptions.chime_mode === 1 ? 'custom' : 'hourly');
+          updateChimeSchedulePreview();
+          updateChimeDependencies();
         }
       } catch (e) {
         console.error('Error loading options from hash:', e);
@@ -1130,6 +1458,243 @@
       }
     }
 
+    function updateSoundLevelDisplay(val) {
+      var el = document.getElementById('sound_level_val');
+      if (el) el.textContent = val;
+    }
+
+    function updateVibeStrengthDisplay(val) {
+      var el = document.getElementById('vibe_strength_val');
+      if (el) el.textContent = val;
+    }
+
+    function updateChimeDependencies() {
+      var morseOn = document.getElementById('hourly_chime_morse').checked;
+      var vibeOn = document.getElementById('hourly_chime_vibe').checked;
+      var soundRow = document.getElementById('sound_level_row');
+      var vibeBlock = document.getElementById('vibe_options_block');
+
+      if (soundRow) soundRow.style.display = morseOn ? 'block' : 'none';
+      if (vibeBlock) vibeBlock.style.display = vibeOn ? 'block' : 'none';
+    }
+
+    function setChimeMode(mode) {
+      var btnHourly = document.getElementById('btn_chime_hourly');
+      var btnCustom = document.getElementById('btn_chime_custom');
+      var customRow = document.getElementById('custom_schedule_row');
+
+      if (mode === 'hourly') {
+        btnHourly.classList.add('active');
+        btnCustom.classList.remove('active');
+        customRow.style.display = 'none';
+      } else {
+        btnHourly.classList.remove('active');
+        btnCustom.classList.add('active');
+        customRow.style.display = 'block';
+      }
+    }
+
+    // ==========================================
+    // Custom Chime Schedule Parsing & Validation
+    // ==========================================
+    // 형식 지원:
+    //  - 1,2,3 -> 24H 시간제 01:00, 02:00, 03:00
+    //  - 1:15,2,3:34 -> 01:15, 02:00, 03:34
+    //  - :20 -> 매 시간 20분
+    // 중복 발생 시: 가장 마지막 항목만 활성화
+    // 콤마 제한: 최대 4개 (최대 5개 항목만 허용)
+    function parseChimeSchedule(inputStr) {
+      if (typeof inputStr !== 'string') {
+        return { valid: true, items: [], normalized: '', errorKey: null, previewText: '' };
+      }
+      var trimmed = inputStr.trim();
+      if (trimmed === '') {
+        return { valid: true, items: [], normalized: '', errorKey: null, previewText: '' };
+      }
+
+      var commaCount = (trimmed.match(/,/g) || []).length;
+      if (commaCount > 4) {
+        return { valid: false, items: [], normalized: '', errorKey: 'chimeErrCommaLimit', previewText: '' };
+      }
+
+      var rawTokens = trimmed.split(',');
+      if (rawTokens.length > 5) {
+        return { valid: false, items: [], normalized: '', errorKey: 'chimeErrCommaLimit', previewText: '' };
+      }
+
+      var parsedList = [];
+
+      for (var i = 0; i < rawTokens.length; i++) {
+        var tok = rawTokens[i].trim();
+        if (tok === '') {
+          return { valid: false, items: [], normalized: '', errorKey: 'chimeErrEmptyItem', previewText: '' };
+        }
+
+        // 1) ":MM" 또는 ":M" (매 시간 특정 분)
+        var matchHourly = tok.match(/^:(\d{1,2})$/);
+        if (matchHourly) {
+          var m = parseInt(matchHourly[1], 10);
+          if (m < 0 || m > 59) {
+            return { valid: false, items: [], normalized: '', errorKey: 'chimeErrInvalidRange', previewText: '' };
+          }
+          var normM = ':' + (m < 10 ? '0' + m : '' + m);
+          parsedList.push({
+            type: 'hourly',
+            hour: -1,
+            min: m,
+            key: 'EVERY:' + m,
+            str: normM,
+            desc: (currentLang === 'ko' ? '매시 ' + m + '분' : 'Every hour at :' + (m < 10 ? '0' + m : '' + m))
+          });
+          continue;
+        }
+
+        // 2) "H:MM" 또는 "HH:MM" (특정 시각)
+        var matchExact = tok.match(/^(\d{1,2}):(\d{1,2})$/);
+        if (matchExact) {
+          var h = parseInt(matchExact[1], 10);
+          var m = parseInt(matchExact[2], 10);
+          if (h < 0 || h > 23 || m < 0 || m > 59) {
+            return { valid: false, items: [], normalized: '', errorKey: 'chimeErrInvalidRange', previewText: '' };
+          }
+          var normExact = (h < 10 ? '0' + h : '' + h) + ':' + (m < 10 ? '0' + m : '' + m);
+          parsedList.push({
+            type: 'exact',
+            hour: h,
+            min: m,
+            key: 'EXACT:' + h + ':' + m,
+            str: normExact,
+            desc: normExact
+          });
+          continue;
+        }
+
+        // 3) "H" 또는 "HH" (시 정각)
+        var matchHourOnly = tok.match(/^(\d{1,2})$/);
+        if (matchHourOnly) {
+          var h = parseInt(matchHourOnly[1], 10);
+          if (h < 0 || h > 23) {
+            return { valid: false, items: [], normalized: '', errorKey: 'chimeErrInvalidRange', previewText: '' };
+          }
+          var normHour = (h < 10 ? '0' + h : '' + h) + ':00';
+          parsedList.push({
+            type: 'exact',
+            hour: h,
+            min: 0,
+            key: 'EXACT:' + h + ':0',
+            str: normHour,
+            desc: normHour
+          });
+          continue;
+        }
+
+        return { valid: false, items: [], normalized: '', errorKey: 'chimeErrInvalidFormat', previewText: '' };
+      }
+
+      // 중복 처리: 뒤에서부터 순회하여 마지막 것만 활성화
+      var seenKeys = {};
+      var dedupedReverse = [];
+      for (var j = parsedList.length - 1; j >= 0; j--) {
+        var item = parsedList[j];
+        if (!seenKeys[item.key]) {
+          seenKeys[item.key] = true;
+          dedupedReverse.push(item);
+        }
+      }
+      var finalItems = dedupedReverse.reverse();
+      var normalizedStr = finalItems.map(function(it) { return it.str; }).join(',');
+      var previewStr = finalItems.map(function(it) { return it.desc; }).join(', ');
+
+      return {
+        valid: true,
+        items: finalItems,
+        normalized: normalizedStr,
+        errorKey: null,
+        previewText: previewStr
+      };
+    }
+
+    var isCustomScheduleValid = true;
+
+    function setChimeError(msg) {
+      var errEl = document.getElementById('chime_error_msg');
+      var input = document.getElementById('chime_schedule');
+      if (!errEl || !input) return;
+
+      if (msg) {
+        errEl.textContent = msg;
+        errEl.style.display = 'block';
+        input.style.borderColor = '#ef4444';
+        input.style.boxShadow = '0 0 0 1px #ef4444';
+      } else {
+        errEl.style.display = 'none';
+        input.style.borderColor = 'var(--border-color)';
+        input.style.boxShadow = 'none';
+      }
+    }
+
+    function validateCustomSchedule(showError) {
+      var isCustom = document.getElementById('btn_chime_custom').classList.contains('active');
+      if (!isCustom) {
+        setChimeError(null);
+        isCustomScheduleValid = true;
+        return true;
+      }
+
+      var input = document.getElementById('chime_schedule');
+      var val = input ? input.value : '';
+      var parsed = parseChimeSchedule(val);
+
+      if (!parsed.valid) {
+        if (showError) {
+          var dict = i18nData[currentLang] || i18nData['en'];
+          setChimeError(dict[parsed.errorKey] || 'Invalid schedule');
+        }
+        isCustomScheduleValid = false;
+        return false;
+      }
+
+      setChimeError(null);
+      isCustomScheduleValid = true;
+      currentOptions.chime_schedule = parsed.normalized;
+      return true;
+    }
+
+    function updateChimeSchedulePreview() {
+      var input = document.getElementById('chime_schedule');
+      var preview = document.getElementById('chime_parsed_preview');
+      var isHourly = document.getElementById('btn_chime_hourly').classList.contains('active');
+      var dict = i18nData[currentLang] || i18nData['en'];
+
+      if (isHourly) {
+        setChimeError(null);
+        isCustomScheduleValid = true;
+        currentOptions.chime_schedule = '0';
+        if (preview) {
+          preview.textContent = dict.chimePreviewPrefix + '00' + dict.chimeMinuteUnit;
+        }
+        return;
+      }
+
+      var parsed = parseChimeSchedule(input ? input.value : '');
+      if (!parsed.valid) {
+        if (preview) {
+          preview.textContent = '';
+        }
+        return;
+      }
+
+      currentOptions.chime_schedule = parsed.normalized;
+
+      if (preview) {
+        if (parsed.items.length === 0) {
+          preview.textContent = dict.chimePreviewEmpty;
+        } else {
+          preview.textContent = (currentLang === 'ko' ? '알림 예정: ' : 'Scheduled: ') + parsed.previewText;
+        }
+      }
+    }
+
     // Range slider event
     document.getElementById('show_second_hand_maxcount').addEventListener('input', function(e) {
       currentOptions.show_second_hand_maxcount = parseInt(e.target.value, 10);
@@ -1142,6 +1707,262 @@
 
     document.getElementById('use_sleep').addEventListener('change', function() {
       updateSleepDependency();
+    });
+
+    document.getElementById('btn_chime_hourly').addEventListener('click', function() {
+      setChimeMode('hourly');
+      updateChimeSchedulePreview();
+    });
+
+    document.getElementById('btn_chime_custom').addEventListener('click', function() {
+      setChimeMode('custom');
+      updateChimeSchedulePreview();
+    });
+
+    var chimeInput = document.getElementById('chime_schedule');
+
+    // 콤마 4개까지만 허용: 5번째 콤마 입력 실시간 차단
+    chimeInput.addEventListener('keydown', function(e) {
+      if (e.key === ',') {
+        var commas = (chimeInput.value.match(/,/g) || []).length;
+        if (commas >= 4) {
+          e.preventDefault();
+        }
+      }
+    });
+
+    chimeInput.addEventListener('input', function(e) {
+      var commas = (chimeInput.value.match(/,/g) || []).length;
+      if (commas > 4) {
+        var parts = chimeInput.value.split(',');
+        chimeInput.value = parts.slice(0, 5).join(',');
+      }
+      updateChimeSchedulePreview();
+    });
+
+    // 복사해 넣었을 때를 대비한 onblur 정합성 체크 (위반 시 레드 보더 및 오류 문구 표시)
+    chimeInput.addEventListener('blur', function() {
+      var ok = validateCustomSchedule(true);
+      if (ok) {
+        var parsed = parseChimeSchedule(chimeInput.value);
+        if (parsed.valid && parsed.items.length > 0) {
+          chimeInput.value = parsed.items.map(function(it) { return it.str; }).join(', ');
+        }
+      }
+    });
+
+    document.getElementById('hourly_chime_morse').addEventListener('change', function() {
+      updateChimeDependencies();
+    });
+
+    document.getElementById('chime_sound_level').addEventListener('input', function(e) {
+      currentOptions.chime_sound_level = parseInt(e.target.value, 10);
+      updateSoundLevelDisplay(currentOptions.chime_sound_level);
+      if (activeMasterGainNode && audioCtx) {
+        var gainVal = calculateMorseGain(currentOptions.chime_sound_level);
+        activeMasterGainNode.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+      }
+    });
+
+    document.getElementById('hourly_chime_vibe').addEventListener('change', function() {
+      updateChimeDependencies();
+    });
+
+    document.getElementById('chime_vibe_style').addEventListener('change', function(e) {
+      currentOptions.chime_vibe_style = parseInt(e.target.value, 10);
+    });
+
+    document.getElementById('chime_vibe_strength').addEventListener('input', function(e) {
+      currentOptions.chime_vibe_strength = parseInt(e.target.value, 10);
+      updateVibeStrengthDisplay(currentOptions.chime_vibe_strength);
+    });
+
+    // ==========================================
+    // Web Audio API Sound Preview Engine
+    // ==========================================
+    var audioCtx = null;
+    var isAudioPlaying = false;
+    var activeAudioTimers = [];
+    var activeMasterGainNode = null;
+    var NUMERIC_MORSE = {
+      '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-',
+      '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.'
+    };
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        var AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtx = new AudioContextClass();
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    // 청각 인지 곡선(Exponential)에 기반한 게인 매핑 (1단계: 0.015 ~ 10단계: 0.70)
+    function calculateMorseGain(level) {
+      var minGain = 0.015;
+      var maxGain = 0.70;
+      var norm = Math.max(1, Math.min(10, parseInt(level, 10) || 7)) - 1;
+      return minGain * Math.pow(maxGain / minGain, norm / 9);
+    }
+
+    function formatCurrentTime24h() {
+      var now = new Date();
+      var h = now.getHours();
+      var m = now.getMinutes();
+      return (h < 10 ? '0' + h : '' + h) + (m < 10 ? '0' + m : '' + m);
+    }
+
+    function stopMorseAudio() {
+      isAudioPlaying = false;
+      for (var i = 0; i < activeAudioTimers.length; i++) {
+        clearTimeout(activeAudioTimers[i]);
+      }
+      activeAudioTimers = [];
+      activeMasterGainNode = null;
+
+      var btn = document.getElementById('btn_test_audio');
+      var txt = document.getElementById('txt_test_audio');
+      var badge = document.getElementById('test_status_badge');
+      var visualizer = document.getElementById('morse_visualizer');
+      var dict = i18nData[currentLang] || i18nData['en'];
+
+      if (btn) btn.classList.remove('is-playing');
+      if (txt) txt.textContent = dict.btnTestAudio;
+      if (badge) {
+        badge.textContent = dict.testStatusReady;
+        badge.style.background = 'rgba(148, 163, 184, 0.15)';
+        badge.style.color = 'var(--text-muted)';
+      }
+      if (visualizer) visualizer.style.display = 'none';
+    }
+
+    function playMorseAudioPreview() {
+      if (isAudioPlaying) {
+        stopMorseAudio();
+        return;
+      }
+
+      var ctx = getAudioContext();
+      if (!ctx) {
+        alert('Web Audio API is not supported on this browser.');
+        return;
+      }
+
+      isAudioPlaying = true;
+      var btn = document.getElementById('btn_test_audio');
+      var txt = document.getElementById('txt_test_audio');
+      var badge = document.getElementById('test_status_badge');
+      var visualizer = document.getElementById('morse_visualizer');
+      var timeDisplay = document.getElementById('morse_time_display');
+      var codeDisplay = document.getElementById('morse_code_display');
+      var dict = i18nData[currentLang] || i18nData['en'];
+
+      if (btn) btn.classList.add('is-playing');
+      if (txt) txt.textContent = dict.btnStopAudio;
+      if (badge) {
+        badge.textContent = dict.testStatusPlaying;
+        badge.style.background = 'rgba(56, 189, 248, 0.2)';
+        badge.style.color = 'var(--accent)';
+      }
+
+      var time24 = formatCurrentTime24h();
+      var timeH = time24.substring(0, 2);
+      var timeM = time24.substring(2, 4);
+
+      var morseH = (NUMERIC_MORSE[timeH[0]] || '') + '  ' + (NUMERIC_MORSE[timeH[1]] || '');
+      var morseM = (NUMERIC_MORSE[timeM[0]] || '') + '  ' + (NUMERIC_MORSE[timeM[1]] || '');
+
+      // 두 줄 레이아웃 + 드래그 지원 + 가로 스크롤
+      if (visualizer && timeDisplay && codeDisplay) {
+        visualizer.style.display = 'block';
+        timeDisplay.textContent = '🕒 ' + timeH + ':' + timeM + ' (24H)';
+        codeDisplay.innerHTML =
+          '<div style="margin-bottom: 6px; padding: 2px 0;">' +
+            '<span style="color: var(--text-muted); font-size: 11px; margin-right: 8px; user-select: none;">HH (' + timeH + '):</span>' +
+            '<span style="color: var(--accent); font-weight: 700; letter-spacing: 3px;">' + morseH + '</span>' +
+          '</div>' +
+          '<div style="padding: 2px 0;">' +
+            '<span style="color: var(--text-muted); font-size: 11px; margin-right: 8px; user-select: none;">MM (' + timeM + '):</span>' +
+            '<span style="color: var(--accent); font-weight: 700; letter-spacing: 3px;">' + morseM + '</span>' +
+          '</div>';
+      }
+
+      var unitMs = 65;
+      var dotMs = unitMs;
+      var lineMs = unitMs * 3;
+      var intraMs = unitMs;
+      var gap3Ms = unitMs * 3;
+      var gap7Ms = unitMs * 7;
+
+      // 마스터 게인 노드 생성 (슬라이더 실시간 연동 지원)
+      var currentLevel = currentOptions.chime_sound_level || 7;
+      activeMasterGainNode = ctx.createGain();
+      activeMasterGainNode.gain.setValueAtTime(calculateMorseGain(currentLevel), ctx.currentTime);
+      activeMasterGainNode.connect(ctx.destination);
+
+      var freq = 523.25; // C5 (523Hz) nBack 고유 톤
+      var fullMorseSequence = morseH + ' / ' + morseM;
+      var currentTimeMs = 50;
+
+      for (var i = 0; i < fullMorseSequence.length; i++) {
+        var ch = fullMorseSequence[i];
+        if (ch === '.' || ch === '-') {
+          var dur = (ch === '-') ? lineMs : dotMs;
+
+          (function(startMs, playDur) {
+            var tid = setTimeout(function() {
+              if (!isAudioPlaying || !activeMasterGainNode) return;
+              try {
+                var osc = ctx.createOscillator();
+                var noteGain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+
+                // Attack / Release 커브
+                noteGain.gain.setValueAtTime(0.0001, ctx.currentTime);
+                noteGain.gain.exponentialRampToValueAtTime(1.0, ctx.currentTime + 0.005);
+                noteGain.gain.setValueAtTime(1.0, ctx.currentTime + (playDur / 1000) - 0.005);
+                noteGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + (playDur / 1000));
+
+                osc.connect(noteGain);
+                noteGain.connect(activeMasterGainNode);
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + (playDur / 1000));
+              } catch (err) {
+                console.error('Audio play error:', err);
+              }
+            }, startMs);
+            activeAudioTimers.push(tid);
+          })(currentTimeMs, dur);
+
+          currentTimeMs += dur;
+
+          if (i + 1 < fullMorseSequence.length) {
+            var next = fullMorseSequence[i + 1];
+            if (next === '.' || next === '-') {
+              currentTimeMs += intraMs;
+            }
+          }
+        } else if (ch === ' ') {
+          currentTimeMs += gap3Ms;
+        } else if (ch === '/') {
+          currentTimeMs += gap7Ms;
+        }
+      }
+
+      var finishTid = setTimeout(function() {
+        stopMorseAudio();
+      }, currentTimeMs + 200);
+      activeAudioTimers.push(finishTid);
+    }
+
+    document.getElementById('btn_test_audio').addEventListener('click', function() {
+      playMorseAudioPreview();
     });
 
     // Buttons
@@ -1161,6 +1982,31 @@
       currentOptions.wake_time = (wakeInput && wakeInput.value) ? wakeInput.value.trim() : "";
       currentOptions.wake_on_reappear = document.getElementById('wake_on_reappear').checked ? 1 : 0;
 
+      // 정시 알림 옵션 저장
+      currentOptions.hourly_chime_morse = document.getElementById('hourly_chime_morse').checked ? 1 : 0;
+      currentOptions.chime_sound_level = parseInt(document.getElementById('chime_sound_level').value, 10);
+      currentOptions.hourly_chime_vibe = document.getElementById('hourly_chime_vibe').checked ? 1 : 0;
+      currentOptions.chime_vibe_style = parseInt(document.getElementById('chime_vibe_style').value, 10);
+      currentOptions.chime_vibe_strength = parseInt(document.getElementById('chime_vibe_strength').value, 10);
+
+      var isHourly = document.getElementById('btn_chime_hourly').classList.contains('active');
+      currentOptions.chime_mode = isHourly ? 0 : 1;
+
+      var inputVal = document.getElementById('chime_schedule').value.trim();
+      if (inputVal !== '') {
+        var parsed = parseChimeSchedule(inputVal);
+        if (parsed.valid) {
+          currentOptions.chime_schedule = parsed.normalized;
+        } else if (!isHourly) {
+          if (!validateCustomSchedule(true)) {
+            document.getElementById('chime_schedule').focus();
+            return; // 정합성 위반 시 submit 중단
+          }
+        }
+      } else if (!isHourly) {
+        currentOptions.chime_schedule = '';
+      }
+
       var returnTo = getQueryParam('return_to', 'pebblejs://close#');
       var sep = (returnTo.indexOf('#') === -1) ? '#' : '';
       var returnUri = returnTo + sep + encodeURIComponent(JSON.stringify(currentOptions));
@@ -1171,6 +2017,9 @@
     loadOptions();
     updateSecondHandDependency();
     updateSleepDependency();
+    updateChimeDependencies();
+    updateSoundLevelDisplay(currentOptions.chime_sound_level);
+    updateVibeStrengthDisplay(currentOptions.chime_vibe_strength);
   </script>
 </body>
 </html>
