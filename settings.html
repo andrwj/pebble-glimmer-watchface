@@ -141,11 +141,6 @@
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
     }
 
-    .card-row.is-disabled {
-      opacity: 0.4;
-      pointer-events: none;
-    }
-
     .card-row {
       display: flex;
       align-items: center;
@@ -222,69 +217,6 @@
 
     input:checked + .slider-track:before {
       transform: translateX(22px);
-    }
-
-    /* Range Sliders */
-    .range-container {
-      margin-top: 14px;
-    }
-
-    .range-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .badge-val {
-      display: inline-block;
-      padding: 3px 10px;
-      background: rgba(56, 189, 248, 0.15);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--accent);
-      font-variant-numeric: tabular-nums;
-    }
-
-    input[type=range] {
-      -webkit-appearance: none;
-      width: 100%;
-      background: transparent;
-    }
-
-    input[type=range]:focus {
-      outline: none;
-    }
-
-    input[type=range]::-webkit-slider-runnable-track {
-      width: 100%;
-      height: 8px;
-      cursor: pointer;
-      background: #334155;
-      border-radius: 4px;
-    }
-
-    input[type=range]::-webkit-slider-thumb {
-      height: 22px;
-      width: 22px;
-      border-radius: 50%;
-      background: #ffffff;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-      cursor: pointer;
-      -webkit-appearance: none;
-      margin-top: -7px;
-      border: 2px solid var(--accent);
-    }
-
-    .range-container.is-disabled {
-      opacity: 0.4;
-      pointer-events: none;
-    }
-
-    input[type=range]:disabled {
-      cursor: default;
     }
 
     /* Pebble 64-Color Picker Tool */
@@ -467,17 +399,17 @@
         </div>
       </div>
       <h1 data-i18n="title">Glimmer</h1>
-      <p data-i18n="subtitle">Dynamic Gesture & Power Management</p>
-      <div class="header-version">v1.9</div>
+      <p data-i18n="subtitle">Minimal Orbit Watchface</p>
+      <div class="header-version" id="header_version">v2.0</div>
     </div>
 
     <!-- Section 1: Everyday — second hand, haptics -->
-    <div class="section-title" data-i18n="everydaySection">Display & Haptics</div>
+    <div class="section-title" data-i18n="everydaySection">Display & Performance</div>
     <div class="card">
       <div class="card-row">
         <div class="card-info">
           <div class="card-label" data-i18n="showSecondHandLabel">Show Second Hand</div>
-          <div class="card-desc" data-i18n="showSecondHandDesc">If sleep is off, the second hand runs every second; if it is on, it shows only briefly after you look at the watch.</div>
+          <div class="card-desc" data-i18n="showSecondHandDesc">When enabled, the second hand runs every second. When disabled, the watch updates once per minute to save battery.</div>
         </div>
         <label class="switch">
           <input type="checkbox" id="show_second_hand" checked>
@@ -485,85 +417,6 @@
         </label>
       </div>
 
-      <div class="divider"></div>
-
-      <div class="card-row">
-        <div class="card-info">
-          <div class="card-label" data-i18n="sleepVibeLabel">Vibrate on Sleep</div>
-          <div class="card-desc" data-i18n="sleepVibeDesc">Vibrate briefly when entering sleep mode.</div>
-        </div>
-        <label class="switch">
-          <input type="checkbox" id="sleep_vibe">
-          <span class="slider-track"></span>
-        </label>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="card-row">
-        <div class="card-info">
-          <div class="card-label" data-i18n="wakeVibeLabel">Vibrate on Wake</div>
-          <div class="card-desc" data-i18n="wakeVibeDesc">Vibrate briefly when waking up from sleep mode.</div>
-        </div>
-        <label class="switch">
-          <input type="checkbox" id="wake_vibe">
-          <span class="slider-track"></span>
-        </label>
-      </div>
-    </div>
-
-    <!-- Section 2: Sleep gestures -->
-    <div class="section-title" data-i18n="gestureSection">Gesture Controls</div>
-    <div class="card">
-      <div class="card-row" id="shake-to-wake-row">
-        <div class="card-info">
-          <div class="card-label" data-i18n="shakeToWakeLabel">Shake to Wake</div>
-          <div class="card-desc" data-i18n="shakeToWakeDesc">Shake the watch to catch up the hands.</div>
-        </div>
-        <label class="switch">
-          <input type="checkbox" id="shake_to_wake">
-          <span class="slider-track"></span>
-        </label>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="card-row">
-        <div class="card-info">
-          <div class="card-label" data-i18n="flipLabel">Flip to Sleep & Wake</div>
-          <div class="card-desc" data-i18n="flipDesc">Turn the watch face-down to sleep; turn upright to wake.</div>
-        </div>
-        <label class="switch">
-          <input type="checkbox" id="hibernate_face_down">
-          <span class="slider-track"></span>
-        </label>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="range-container" id="sleep-angle-row">
-        <div class="range-header">
-          <div>
-            <div class="card-label" data-i18n="sleepAngleLabel">Sleep Tilt Angle</div>
-            <div class="card-desc" data-i18n="sleepAngleDesc">Angle tilted outward/downward to enter sleep mode.</div>
-          </div>
-          <div class="badge-val" id="sleep_angle_badge">80°</div>
-        </div>
-        <input type="range" id="sleep_tilt_angle" min="60" max="120" step="5" value="80">
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="range-container" id="wake-angle-row">
-        <div class="range-header">
-          <div>
-            <div class="card-label" data-i18n="wakeAngleLabel">Wake Tilt Angle</div>
-            <div class="card-desc" data-i18n="wakeAngleDesc">Angle tilted inward/upward to wake up the watch.</div>
-          </div>
-          <div class="badge-val" id="wake_angle_badge">60°</div>
-        </div>
-        <input type="range" id="wake_tilt_angle" min="30" max="75" step="5" value="60">
-      </div>
     </div>
 
     <!-- Section 3: Colors (all palettes together) -->
@@ -611,24 +464,12 @@
     var i18nData = {
       en: {
         title: "Glimmer",
-        subtitle: "Dynamic Gesture & Power Management",
-        everydaySection: "Display & Haptics",
-        gestureSection: "Gesture & Sleep Controls",
-        flipLabel: "Flip to Sleep & Wake",
-        flipDesc: "Turn the watch face-down to sleep; turn upright to wake instantly.",
-        sleepAngleLabel: "Sleep Tilt Angle",
-        sleepAngleDesc: "Angle tilted outward/downward to enter sleep mode.",
-        wakeAngleLabel: "Wake Tilt Angle",
-        wakeAngleDesc: "Angle tilted inward/upward to wake up the watch.",
-        shakeToWakeLabel: "Shake to Wake",
-        shakeToWakeDesc: "Shake the watch to catch up the hands.",
-        sleepVibeLabel: "Vibrate on Sleep",
-        sleepVibeDesc: "Vibrate briefly when entering sleep mode.",
-        wakeVibeLabel: "Vibrate on Wake",
-        wakeVibeDesc: "Vibrate briefly when waking up from sleep mode.",
+        subtitle: "Minimal Orbit Watchface",
+        everydaySection: "Display & Performance",
+
         displaySection: "Display & Styling",
         showSecondHandLabel: "Show Second Hand",
-        showSecondHandDesc: "If sleep is off, the second hand runs every second; if it is on, it shows only briefly after you look at the watch.",
+        showSecondHandDesc: "When enabled, the second hand runs every second. When disabled, the watch updates once per minute to save battery.",
         dateColorLabel: "Date & Day Text Color",
         dateColorDesc: "Choose any of the 64 Pebble SDK colors for the day and date.",
         hourColorLabel: "Hour Hand Color",
@@ -644,24 +485,12 @@
       },
       ko: {
         title: "Glimmer",
-        subtitle: "다이내믹 제스처 및 전력 관리",
-        everydaySection: "표시 및 진동",
-        gestureSection: "모션 및 잠자기 제스처",
-        flipLabel: "뒤집어서 잠자기 / 깨우기 (Flip)",
-        flipDesc: "시계를 엎으면 잠들고, 다시 바로 돌려놓으면 즉시 깨어납니다.",
-        sleepAngleLabel: "잠자는 젖힘 각도 (Sleep Angle)",
-        sleepAngleDesc: "시계면을 바깥쪽으로 얼마 이상 젖힐 때 잠들지 설정합니다.",
-        wakeAngleLabel: "깨어나는 몸쪽 각도 (Wake Angle)",
-        wakeAngleDesc: "시계면을 몸쪽으로 얼마 이하로 돌려놓았을 때 깨어날지 설정합니다.",
-        shakeToWakeLabel: "흔들어서 깨우기",
-        shakeToWakeDesc: "시계를 흔들면 바늘을 현재 시각으로 감습니다.",
-        sleepVibeLabel: "잠들 때 진동",
-        sleepVibeDesc: "잠자기 모드로 진입할 때 짧게 진동합니다.",
-        wakeVibeLabel: "깨어날 때 진동",
-        wakeVibeDesc: "잠에서 깨어날 때 짧게 진동합니다.",
+        subtitle: "미니멀 오빗 워치페이스",
+        everydaySection: "디스플레이 및 성능",
+
         displaySection: "디스플레이 및 색상",
         showSecondHandLabel: "초침 표시",
-        showSecondHandDesc: "잠자기 기능이 꺼져 있으면 초침을 1초마다 계속 표시하고 켜져 있으면 시계를 본 직후 몇 초만 그립니다.",
+        showSecondHandDesc: "켜짐 시 초침이 1초마다 실시간으로 표시됩니다. 꺼짐 시 1분 단위로 갱신되어 배터리를 크게 절약합니다.",
         dateColorLabel: "요일 / 날짜 텍스트 색상",
         dateColorDesc: "다이얼에 표시되는 날짜와 요일의 색상을 선택합니다.",
         hourColorLabel: "시침 색상",
@@ -711,13 +540,7 @@
       minute_color: 241,
       second_color: 192,
       center_color: 241,
-      hibernate_face_down: 0,
-      sleep_tilt_angle: 80,
-      wake_tilt_angle: 60,
-      sleep_vibe: 0,
-      wake_vibe: 0,
       show_second_hand: 1,
-      shake_to_wake: 0,
     };
 
     // Pebble SDK 64-Color Palette Definitions
@@ -985,96 +808,69 @@
       }
     });
 
-    // Sliders
-    var sleepSlider = document.getElementById('sleep_tilt_angle');
-    var sleepBadge = document.getElementById('sleep_angle_badge');
-    sleepSlider.addEventListener('input', function() {
-      sleepBadge.textContent = this.value + '°';
-      currentOptions.sleep_tilt_angle = parseInt(this.value, 10);
-    });
-
-    var wakeSlider = document.getElementById('wake_tilt_angle');
-    var wakeBadge = document.getElementById('wake_angle_badge');
-    wakeSlider.addEventListener('input', function() {
-      wakeBadge.textContent = this.value + '°';
-      currentOptions.wake_tilt_angle = parseInt(this.value, 10);
-    });
-
-    function updateFlipDependentControls() {
-      var flipOn = document.getElementById('hibernate_face_down').checked;
-      document.getElementById('sleep-angle-row').classList.toggle('is-disabled', !flipOn);
-      document.getElementById('wake-angle-row').classList.toggle('is-disabled', !flipOn);
-      sleepSlider.disabled = !flipOn;
-      wakeSlider.disabled = !flipOn;
+    function getQueryParam(variable, defaultValue) {
+      var query = location.search.substring(1);
+      var vars = query.split('&');
+      for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (pair[0] === variable) {
+          return decodeURIComponent(pair[1]);
+        }
+      }
+      return defaultValue;
     }
 
-    document.getElementById('hibernate_face_down').addEventListener('change', updateFlipDependentControls);
-
-    // Load initial options from URL Hash
+    // Load initial options from URL Hash or Search
     function loadOptions() {
       try {
-        var hash = window.location.hash.substring(1);
-        if (hash) {
-          var decoded = decodeURIComponent(hash);
+        var paramsStr = '';
+        if (window.location.hash && window.location.hash.length > 1) {
+          paramsStr = window.location.hash.substring(1);
+        } else if (window.location.search && window.location.search.length > 1) {
+          var optionsQuery = getQueryParam('options');
+          if (optionsQuery) {
+            paramsStr = optionsQuery;
+          }
+        }
+
+        if (paramsStr) {
+          var decoded = decodeURIComponent(paramsStr);
           var obj = JSON.parse(decoded);
 
-          if (obj.date_color) {
+          if (obj.version) {
+            var vEl = document.getElementById('header_version');
+            if (vEl) {
+              vEl.textContent = 'v' + obj.version;
+            }
+          }
+
+          if (obj.date_color !== undefined) {
             currentOptions.date_color = parseInt(obj.date_color, 10);
             dateColorPicker.setValue(currentOptions.date_color, false);
           }
 
-          if (obj.hour_color) {
+          if (obj.hour_color !== undefined) {
             currentOptions.hour_color = parseInt(obj.hour_color, 10);
             hourColorPicker.setValue(currentOptions.hour_color, false);
           }
 
-          if (obj.minute_color) {
+          if (obj.minute_color !== undefined) {
             currentOptions.minute_color = parseInt(obj.minute_color, 10);
             minuteColorPicker.setValue(currentOptions.minute_color, false);
           }
 
-          if (obj.second_color) {
+          if (obj.second_color !== undefined) {
             currentOptions.second_color = parseInt(obj.second_color, 10);
             secondColorPicker.setValue(currentOptions.second_color, false);
           }
 
-          if (obj.center_color) {
+          if (obj.center_color !== undefined) {
             currentOptions.center_color = parseInt(obj.center_color, 10);
             centerColorPicker.setValue(currentOptions.center_color, false);
           }
 
-          if (obj.hibernate_face_down !== undefined) {
-            document.getElementById('hibernate_face_down').checked = !!parseInt(obj.hibernate_face_down, 10);
-          }
-
-
-          if (obj.sleep_vibe !== undefined) {
-            document.getElementById('sleep_vibe').checked = !!parseInt(obj.sleep_vibe, 10);
-          }
-
-          if (obj.wake_vibe !== undefined) {
-            document.getElementById('wake_vibe').checked = !!parseInt(obj.wake_vibe, 10);
-          }
-
           if (obj.show_second_hand !== undefined) {
             document.getElementById('show_second_hand').checked = !!parseInt(obj.show_second_hand, 10);
-          }
-
-          if (obj.shake_to_wake !== undefined) {
-            document.getElementById('shake_to_wake').checked = !!parseInt(obj.shake_to_wake, 10);
-          }
-
-
-          if (obj.sleep_tilt_angle) {
-            sleepSlider.value = obj.sleep_tilt_angle;
-            sleepBadge.textContent = obj.sleep_tilt_angle + '°';
-            currentOptions.sleep_tilt_angle = parseInt(obj.sleep_tilt_angle, 10);
-          }
-
-          if (obj.wake_tilt_angle) {
-            wakeSlider.value = obj.wake_tilt_angle;
-            wakeBadge.textContent = obj.wake_tilt_angle + '°';
-            currentOptions.wake_tilt_angle = parseInt(obj.wake_tilt_angle, 10);
           }
         }
       } catch (e) {
@@ -1084,25 +880,21 @@
 
     // Buttons
     document.getElementById('btn-cancel').addEventListener('click', function() {
-      document.location = 'pebblejs://close';
+      var returnTo = getQueryParam('return_to', 'pebblejs://close');
+      document.location = returnTo;
     });
 
     document.getElementById('btn-save').addEventListener('click', function() {
-      currentOptions.hibernate_face_down = document.getElementById('hibernate_face_down').checked ? 1 : 0;
-      currentOptions.sleep_vibe = document.getElementById('sleep_vibe').checked ? 1 : 0;
-      currentOptions.wake_vibe = document.getElementById('wake_vibe').checked ? 1 : 0;
       currentOptions.show_second_hand = document.getElementById('show_second_hand').checked ? 1 : 0;
-      currentOptions.shake_to_wake = document.getElementById('shake_to_wake').checked ? 1 : 0;
-      currentOptions.sleep_tilt_angle = parseInt(sleepSlider.value, 10);
-      currentOptions.wake_tilt_angle = parseInt(wakeSlider.value, 10);
 
-      var returnUri = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(currentOptions));
+      var returnTo = getQueryParam('return_to', 'pebblejs://close#');
+      var sep = (returnTo.indexOf('#') === -1) ? '#' : '';
+      var returnUri = returnTo + sep + encodeURIComponent(JSON.stringify(currentOptions));
       document.location = returnUri;
     });
 
     detectLanguage();
     loadOptions();
-    updateFlipDependentControls();
   </script>
 </body>
 </html>
