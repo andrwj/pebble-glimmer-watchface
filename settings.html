@@ -253,6 +253,12 @@
       opacity: 0.5;
     }
 
+    .sub-btn:disabled {
+      opacity: 0.38;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
     .sub-btn {
       flex: 1;
       padding: 8px 12px;
@@ -522,7 +528,7 @@
       </div>
       <h1 data-i18n="title">Glimmer</h1>
       <p data-i18n="subtitle">Minimal Orbit Watchface</p>
-      <div class="header-version" id="header_version">v2.1</div>
+      <div class="header-version" id="header_version">v2.2</div>
     </div>
 
     <!-- Section 1: Everyday — second hand, haptics -->
@@ -614,6 +620,48 @@
         </label>
       </div>
       <div class="card-desc" style="margin-top: 10px; color: var(--accent); font-weight: 500;" data-i18n="sleepWakeNotice">※ Note: During sleep hours, launching the watch will display the updated time and then return to sleep. Outside this range, normal operation resumes.</div>
+    </div>
+
+    <!-- Section: Tap to Update Time -->
+    <div class="section-title" data-i18n="tapSection">Tap to Update Time</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-label" data-i18n="useTappingLabel">Enable Tap to Update</div>
+          <div class="card-desc" data-i18n="useTappingDesc">Tap the watch to roll hands and update the current time.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="use_tapping">
+          <span class="slider-track"></span>
+        </label>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="card-row" id="tapping_threshold_row">
+        <div class="card-info">
+          <div class="card-label" data-i18n="tappingThresholdLabel">Tap Count</div>
+          <div class="card-desc" data-i18n="tappingThresholdDesc">Number of consecutive taps required to trigger time update (1 or 2). Setting to 2 prevents accidental triggering when moved.</div>
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px; margin: 8px 0 6px;" id="tapping_threshold_btn_group">
+        <button type="button" id="btn_tap_1" class="sub-btn active" data-i18n="tapCount1">1 Tap (Default)</button>
+        <button type="button" id="btn_tap_2" class="sub-btn" data-i18n="tapCount2">2 Taps (Double Tap)</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="card-row" id="tap_while_sleeping_row">
+        <div class="card-info">
+          <div class="card-label" data-i18n="tapWhileSleepingLabel">Recognize Tap While Sleeping</div>
+          <div class="card-desc" data-i18n="tapWhileSleepingDesc">Allow tap recognition even during deep sleep mode to briefly wake up and check the time.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="tap_while_sleeping">
+          <span class="slider-track"></span>
+        </label>
+      </div>
+      <div class="card-desc" style="margin-top: 10px; color: var(--accent); font-weight: 500;" data-i18n="tapNotice">※ Note: When tapped during sleep, the hands roll to show the current time, stay visible for the configured duration, and then return to sleep.</div>
     </div>
 
     <!-- Section: Hourly Chime -->
@@ -793,6 +841,16 @@
         wakeOnReappearLabel: "Wake Briefly on Reappear",
         wakeOnReappearDesc: "When reappearing from notifications during sleep hours, briefly wake up to show the updated time via rolling animation before returning to sleep.",
         sleepWakeNotice: "※ Note: Deep sleep mode is active within [Sleep Time ~ Wake Time]. If you launch the watch during sleep hours, the rolling animation will update and show the time, then return to sleep.",
+        tapSection: "Tap to Update Time",
+        useTappingLabel: "Enable Tap to Update",
+        useTappingDesc: "Tap the watch to roll hands and update the current time.",
+        tappingThresholdLabel: "Tap Count",
+        tappingThresholdDesc: "Number of consecutive taps required to trigger time update (1 or 2). Setting to 2 prevents accidental triggering when moved.",
+        tapCount1: "1 Tap (Default)",
+        tapCount2: "2 Taps (Double Tap)",
+        tapWhileSleepingLabel: "Recognize Tap While Sleeping",
+        tapWhileSleepingDesc: "Allow tap recognition even during deep sleep mode to briefly wake up and check the time.",
+        tapNotice: "※ Note: When tapped during sleep, the hands roll to show the current time, stay visible for the configured duration, and then return to sleep.",
         chimeSection: "Hourly Chime",
         chimeScheduleLabel: "Chime Schedule",
         chimeScheduleDesc: "Choose every hour on the hour, or specify minutes separated by commas.",
@@ -864,6 +922,16 @@
         wakeOnReappearLabel: "복귀 시 잠깐 깨어나기",
         wakeOnReappearDesc: "수면 시간대라도 알림이 오거나 창이 닫혀 시계 화면으로 돌아올 때, 롤링 애니메이션으로 현재 시간을 확인한 후 다시 잠자기 모드로 들어갑니다.",
         sleepWakeNotice: "※ 안내: [잠자는 시간 ~ 깨어나는 시간] 범위 내에서는 최대 전력 세이빙 모드로 동작합니다. 잠자는 시간대에 시계를 작동시키면 롤링 애니메이션으로 현재 시간을 확인한 후 다시 잠자기 모드로 들어갑니다.",
+        tapSection: "탭해서 시간 업데이트하기",
+        useTappingLabel: "탭 사용하기",
+        useTappingDesc: "시계를 탭하여 시계침을 감고 현재 시각을 업데이트합니다.",
+        tappingThresholdLabel: "탭 횟수",
+        tappingThresholdDesc: "연속해서 탭해야 반응하는 횟수를 설정합니다 (1~2회). 2로 설정하면 시계가 실수로 흔들렸을 때 곧바로 시간이 업데이트되는 것을 방지합니다.",
+        tapCount1: "1회 탭 (기본값)",
+        tapCount2: "2회 탭 (더블 탭)",
+        tapWhileSleepingLabel: "잠자는 중에도 탭 인식하기",
+        tapWhileSleepingDesc: "잠자기(수면) 모드 중에도 탭을 인식하여 잠시 깨어나 시간을 확인할 수 있도록 센서를 유지합니다.",
+        tapNotice: "※ 안내: 잠자는 시간대에 시계를 탭하면 롤링 애니메이션으로 현재 시간을 확인한 후 다시 잠자기 모드로 들어갑니다.",
         chimeSection: "정시 알림",
         chimeScheduleLabel: "알림 시각 설정",
         chimeScheduleDesc: "매 시간 정각마다 울리거나, 쉼표로 구분하여 특정 분(0~59)에 울리도록 설정합니다.",
@@ -966,6 +1034,9 @@
       chime_mode: 0,
       chime_mask_low: 1,
       chime_mask_high: 0,
+      use_tapping: 0,
+      tapping_threshold: 1,
+      tap_while_sleeping: 0,
     };
 
     var currentOptions = Object.assign({}, DEFAULT_OPTIONS);
@@ -1353,6 +1424,24 @@
             document.getElementById('wake_on_reappear').checked = !!currentOptions.wake_on_reappear;
           }
 
+          if (obj.use_tapping !== undefined) {
+            var ut = parseInt(obj.use_tapping, 10);
+            currentOptions.use_tapping = (ut === 0 || ut === 1) ? ut : DEFAULT_OPTIONS.use_tapping;
+            document.getElementById('use_tapping').checked = !!currentOptions.use_tapping;
+          }
+
+          if (obj.tapping_threshold !== undefined) {
+            var tt = parseInt(obj.tapping_threshold, 10);
+            currentOptions.tapping_threshold = (tt === 1 || tt === 2) ? tt : DEFAULT_OPTIONS.tapping_threshold;
+          }
+          setTappingThreshold(currentOptions.tapping_threshold);
+
+          if (obj.tap_while_sleeping !== undefined) {
+            var tws = parseInt(obj.tap_while_sleeping, 10);
+            currentOptions.tap_while_sleeping = (tws === 0 || tws === 1) ? tws : DEFAULT_OPTIONS.tap_while_sleeping;
+            document.getElementById('tap_while_sleeping').checked = !!currentOptions.tap_while_sleeping;
+          }
+
           if (obj.hourly_chime_morse !== undefined) {
             var hm = parseInt(obj.hourly_chime_morse, 10);
             currentOptions.hourly_chime_morse = (hm === 1) ? 1 : 0;
@@ -1456,6 +1545,33 @@
       if (wakeOnReappearRow) {
         wakeOnReappearRow.classList.toggle('is-disabled', !isSleepEnabled);
       }
+    }
+
+    function setTappingThreshold(val) {
+      currentOptions.tapping_threshold = (val === 2) ? 2 : 1;
+      var btn1 = document.getElementById('btn_tap_1');
+      var btn2 = document.getElementById('btn_tap_2');
+      if (btn1 && btn2) {
+        btn1.classList.toggle('active', currentOptions.tapping_threshold === 1);
+        btn2.classList.toggle('active', currentOptions.tapping_threshold === 2);
+      }
+    }
+
+    function updateTappingDependency() {
+      var isTappingEnabled = document.getElementById('use_tapping').checked;
+      var thRow = document.getElementById('tapping_threshold_row');
+      var thBtnGroup = document.getElementById('tapping_threshold_btn_group');
+      var twsRow = document.getElementById('tap_while_sleeping_row');
+      var twsInput = document.getElementById('tap_while_sleeping');
+      var btnTap1 = document.getElementById('btn_tap_1');
+      var btnTap2 = document.getElementById('btn_tap_2');
+
+      if (thRow) thRow.classList.toggle('is-disabled', !isTappingEnabled);
+      if (thBtnGroup) thBtnGroup.classList.toggle('is-disabled', !isTappingEnabled);
+      if (twsRow) twsRow.classList.toggle('is-disabled', !isTappingEnabled);
+      if (twsInput) twsInput.disabled = !isTappingEnabled;
+      if (btnTap1) btnTap1.disabled = !isTappingEnabled;
+      if (btnTap2) btnTap2.disabled = !isTappingEnabled;
     }
 
     function updateSoundLevelDisplay(val) {
@@ -1707,6 +1823,18 @@
 
     document.getElementById('use_sleep').addEventListener('change', function() {
       updateSleepDependency();
+    });
+
+    document.getElementById('use_tapping').addEventListener('change', function() {
+      updateTappingDependency();
+    });
+
+    document.getElementById('btn_tap_1').addEventListener('click', function() {
+      setTappingThreshold(1);
+    });
+
+    document.getElementById('btn_tap_2').addEventListener('click', function() {
+      setTappingThreshold(2);
     });
 
     document.getElementById('btn_chime_hourly').addEventListener('click', function() {
@@ -1981,6 +2109,8 @@
       var wakeInput = document.getElementById('wake_time');
       currentOptions.wake_time = (wakeInput && wakeInput.value) ? wakeInput.value.trim() : "";
       currentOptions.wake_on_reappear = document.getElementById('wake_on_reappear').checked ? 1 : 0;
+      currentOptions.use_tapping = document.getElementById('use_tapping').checked ? 1 : 0;
+      currentOptions.tap_while_sleeping = document.getElementById('tap_while_sleeping').checked ? 1 : 0;
 
       // 정시 알림 옵션 저장
       currentOptions.hourly_chime_morse = document.getElementById('hourly_chime_morse').checked ? 1 : 0;
@@ -2017,6 +2147,7 @@
     loadOptions();
     updateSecondHandDependency();
     updateSleepDependency();
+    updateTappingDependency();
     updateChimeDependencies();
     updateSoundLevelDisplay(currentOptions.chime_sound_level);
     updateVibeStrengthDisplay(currentOptions.chime_vibe_strength);
